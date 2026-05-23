@@ -12,9 +12,4 @@ public class NotificationsService {
 	
 	@Autowired
 	private NotificationsDAO noDao;
-	
-	public void sendNoti(String id, String message, String type) {
-		
-		stomp.convertAndSendToUser(id, message, type);
-	}
 }
