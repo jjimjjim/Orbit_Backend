@@ -8,13 +8,14 @@ public class GroupListDTO {
 	private Long deptSeq;
 	private String deptCode;
 	private String deptName;
+	private String sysname;
 	private String position;
 	private String phone;
 	private String attendanceStatus;
 	
 	public GroupListDTO() {}
 	
-	public GroupListDTO(String id, String name, Long deptSeq, String deptCode, String deptName, String position, String phone,
+	public GroupListDTO(String id, String name, Long deptSeq, String deptCode, String deptName, String sysname, String position, String phone,
 			String attendanceStatus) {
 		super();
 		this.id = id;
@@ -22,6 +23,7 @@ public class GroupListDTO {
 		this.deptSeq = deptSeq;
 		this.deptCode = deptCode;
 		this.deptName = deptName;
+		this.sysname = sysname;
 		this.position = position;
 		this.phone = phone;
 		this.attendanceStatus = attendanceStatus;
@@ -56,6 +58,12 @@ public class GroupListDTO {
 	}
 	public void setDeptName(String deptName) {
 		this.deptName = deptName;
+	}
+	public String getSysname() {
+		return sysname;
+	}
+	public void setSysname(String sysname) {
+		this.sysname = sysname;
 	}
 	public String getPosition() {
 		return position;
