@@ -21,7 +21,7 @@
 
 	<select id="getAllRequest" resultType="com.study.app.domains.signup.SignupDTO">
 		select * from (
-			select signup.*, row_number() over (order by signup_seq) rn from signup <where>
+			select signup.*, row_number() over (order by signup_seq desc) rn from signup <where>
 				<if test="status != 'TOTAL'">
 					status = #{status}
 				</if>

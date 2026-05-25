@@ -23,4 +23,7 @@ public class UsersDAO {
 		return batis.insert("Users.insertUser", dto);
 	}
 	
+	public UsersDTO getHrInfo(String id) {
+		return batis.selectOne("Users.getHrInfo", id);
+	}
 }

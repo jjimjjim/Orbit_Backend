@@ -18,6 +18,8 @@ import com.study.app.domains.rank.RankDTO;
 import com.study.app.domains.signup.SignupDTO;
 import com.study.app.domains.signup.SignupRequestDTO;
 import com.study.app.domains.signup.SignupService;
+import com.study.app.domains.users.UsersDTO;
+import com.study.app.domains.users.UsersService;
 
 @RestController
 @RequestMapping("/admin")
@@ -27,6 +29,8 @@ public class AdminController {
 	private AdminService adminServ;
 	@Autowired
 	private SignupService signupServ;
+	@Autowired
+	private UsersService userServ;
 	
 	@GetMapping("allRequest")
     public ResponseEntity<Map<String, Object>> getAllRequest(@RequestParam Long cPage,
@@ -38,6 +42,12 @@ public class AdminController {
 	@GetMapping("/{signup_seq}")
 	public ResponseEntity<SignupDTO> getUserInfo(@PathVariable Long signup_seq){
 		SignupDTO dto = signupServ.getUserInfo(signup_seq);
+		return ResponseEntity.ok(dto);
+	}
+	
+	@GetMapping("getHrInfo")
+	public ResponseEntity<UsersDTO> getHrInfo(@RequestParam String id){
+		UsersDTO dto = userServ.getHrInfo(id);
 		return ResponseEntity.ok(dto);
 	}
 	
