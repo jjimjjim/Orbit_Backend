@@ -35,8 +35,9 @@ public class AdminController {
 	
 	@GetMapping("allRequest")
     public ResponseEntity<Map<String, Object>> getAllRequest(@RequestParam Long cPage,
-    															@RequestParam String status) {
-        Map<String, Object> result = signupServ.getAllRequest(cPage, status);
+    															@RequestParam String status,
+    															@RequestParam(required = false) String searchTerm) {
+        Map<String, Object> result = signupServ.getAllRequest(cPage, status, searchTerm);
         return ResponseEntity.ok(result);
     }
 	
