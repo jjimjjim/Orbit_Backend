@@ -99,4 +99,8 @@ public class SignupService {
 	public SignupDTO getUserInfo(Long signup_seq) {
 		return dao.getUserInfo(signup_seq);
 	}
+	
+	public void rejectSignup(Long signup_seq) {
+		dao.rejectSignup(signup_seq);
+	}
 }

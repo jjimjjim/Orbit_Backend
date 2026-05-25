@@ -54,4 +54,10 @@
 	<update id="updateStatusToApproved">
 		update signup set status = 'APPROVED' where signup_seq = #{signup_seq}
 	</update>
+	
+	<update id="rejectSignup">
+		update signup set status = 'REJECTED' where signup_seq = #{signup_seq}
+	</update>
+	
+	
 </mapper>
