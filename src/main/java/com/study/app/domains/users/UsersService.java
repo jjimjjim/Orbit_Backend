@@ -1,9 +1,9 @@
 package com.study.app.domains.users;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.study.app.util.JWTUtil;
 
 @Service
 public class UsersService {
@@ -17,5 +17,9 @@ public class UsersService {
 	
 	public UsersDTO getUsersInfo(String loginId) {
 		return dao.getUsersInfo(loginId);
+	}
+	
+	public List<UsersDTO> getAllEmployees(){
+		return dao.getAllEmployees();
 	}
 }
