@@ -1,6 +1,5 @@
 package com.study.app.domains.admin;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -108,5 +107,10 @@ public class AdminController {
 		return ResponseEntity.ok().build();
 	}
 	
+	@PostMapping("/hr/addDept")
+	public ResponseEntity<Void> addDept(@RequestBody DepartmentsDTO dto) {
+		adminServ.addDept(dto);
+		return ResponseEntity.ok().build();
+	}
 	
 }

@@ -28,6 +28,8 @@ public class AdminService {
 	private UsersDAO usersDao;
 	@Autowired
 	private SignupDAO signupDao;
+	@Autowired
+	private AdminDAO adminDao;
 
 	public List<DepartmentsDTO> getDeptList() {
 		return departmentsDao.getDeptList();
@@ -95,5 +97,9 @@ public class AdminService {
 
 	public int updateUsersInfo(UsersDTO dto) {
 		return usersDao.updateUsersInfo(dto);
+	}
+	
+	public void addDept(DepartmentsDTO dto) {
+		adminDao.addDept(dto);
 	}
 }
