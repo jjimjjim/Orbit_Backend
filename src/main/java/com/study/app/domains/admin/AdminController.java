@@ -1,5 +1,6 @@
 package com.study.app.domains.admin;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -82,9 +83,17 @@ public class AdminController {
 	}
 	
 	@GetMapping("/hr/getAllUsers")
-	public ResponseEntity<List<UsersDTO>> getAllUsers(){
-		List<UsersDTO> users_list = adminServ.getAllUsers();
-		return ResponseEntity.ok(users_list);
+	public ResponseEntity<Map<String, Object>> getAllUsers(
+			 @RequestParam(required = false) String keyword,
+			 @RequestParam(required = false) String status,
+		     @RequestParam(defaultValue = "1") Long page){
+
+		Long start = page * 10 - 9;
+	    Long end = page * 10;
+	    
+	    Map<String, Object> result = adminServ.getAllUsers(keyword,status, start, end);
+		    
+		return ResponseEntity.ok(result);
 	}
 	
 	@PutMapping("/hr/updateUsersState")
