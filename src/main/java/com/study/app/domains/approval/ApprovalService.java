@@ -1,19 +1,30 @@
 package com.study.app.domains.approval;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.google.cloud.storage.BlobId;
+import com.google.cloud.storage.BlobInfo;
+import com.google.cloud.storage.Storage;
 
 @Service
 public class ApprovalService {
 
 	@Autowired
 	private ApprovalDAO dao;
+	@Autowired
+	private Storage storage;
+	@Value("${spring.cloud.gcp.bucket}")
+	private String bucketName;
 
 	private void insertCommonApprovalData(DraftDocumentsDTO dto) {
-
+		
 		// selectKey(BEFORE)에 의해 실행 후 docSeq 필드에 시퀀스 값이 채워짐
 		dao.insertDraftDocument(dto); 
 		Long docSeq = dto.getDoc_seq(); // 채워진 시퀀스 꺼내기
@@ -59,17 +70,48 @@ public class ApprovalService {
 	}
 	// 구매 신청서
 	@Transactional
-	public void insertPurchase(PurchaseDTO dto) {
+	public void insertPurchase(PurchaseDTO dto, List<MultipartFile> files) {
 		insertCommonApprovalData(dto);
 		dao.insertPurchaseMaster(dto);
-		
 		Long purchase_seq = dto.getPurchase_seq();
 		
-		if (dto.getItems != null) {
-		    for (PurchaseItemsDTO item : dto.getItems()) {
+		if (dto.getItems() != null) {
+		    for (int i = 0; i < dto.getItems().size(); i++) {
+		    	PurchaseItemsDTO item = dto.getItems().get(i);
 		        item.setPurchase_seq(purchase_seq);
+		        item.setItem_order((Long.valueOf(i + 1)));
 		        dao.insertPurchaseItem(item);
 		    }
+		}
+		// 구매 첨부파일 리스트
+		if(files != null && !files.isEmpty()) {
+			for(MultipartFile file : files) {
+				if(!file.isEmpty()) {
+					try {
+						String oriname = file.getOriginalFilename();
+						String sysname = UUID.randomUUID().toString() + "_" + oriname;
+						
+						BlobId blobId = BlobId.of(bucketName, sysname);
+						BlobInfo blobInfo = BlobInfo.newBuilder(blobId)
+											.setContentType(file.getContentType()).build();
+						
+						// GCS 업로드
+						storage.create(blobInfo, file.getBytes());
+						
+						PurchaseAttachmentsDTO attach = new PurchaseAttachmentsDTO();
+						attach.setPurchase_seq(purchase_seq);
+						attach.setOriname(oriname);
+						attach.setSysname(sysname);
+						
+						dao.insertPurchaseAttachment(attach);
+						
+					}catch(Exception e) {
+						e.printStackTrace();
+						System.out.println(file.getOriginalFilename() + "업로드 실패");
+						throw new RuntimeException(file.getOriginalFilename() + " 파일 업로드 중 오류 발생", e);
+					}
+				}
+			}
 		}
 	}
 

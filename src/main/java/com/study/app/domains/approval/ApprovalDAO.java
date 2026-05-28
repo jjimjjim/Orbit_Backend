@@ -10,23 +10,39 @@ public class ApprovalDAO {
 	@Autowired
 	private SqlSessionTemplate mybatis;
 	
-	public int insertDraftDocument(DraftDocumentsDTO dto) {
-		return mybatis.insert("Approval.insertDraftDocument", dto);
+	public void insertDraftDocument(DraftDocumentsDTO dto) {
+		mybatis.insert("Approval.insertDraftDocument", dto);
 	}
 	
-	public int insertApprovalLines(ApprovalLinesDTO dto) {
-		return mybatis.insert("Approval.insertApprovalLines", dto);
+	public void insertApprovalLines(ApprovalLinesDTO dto) {
+		mybatis.insert("Approval.insertApprovalLines", dto);
 	}
 	
-	public int insertReferrers(ApprovalCcDTO dto) {
-		return mybatis.insert("Approval.insertReferrers", dto);
+	public void insertReferrers(ApprovalCcDTO dto) {
+		mybatis.insert("Approval.insertReferrers", dto);
 	}
 	
-	public int insertVacationDetail(VacationDTO dto) {
-		return mybatis.insert("Approval.insertVacationDetail", dto);
+	public void insertVacationDetail(VacationDTO dto) {
+		mybatis.insert("Approval.insertVacationDetail", dto);
 	}
 	
-	public int insertGeneralDetail(GeneralDTO dto) {
-		return mybatis.insert("Approval.insertGeneralDetail", dto);
+	public void insertGeneralDetail(GeneralDTO dto) {
+		mybatis.insert("Approval.insertGeneralDetail", dto);
+	}
+	
+	public void insertPaymentDetail(PaymentDTO dto) {
+		mybatis.insert("Approval.insertPaymentDetail", dto);
+	}
+	
+	public void insertPurchaseMaster(PurchaseDTO dto) {
+		mybatis.insert("Approval.insertPurchaseMaster", dto);
+	}
+	
+	public void insertPurchaseItem(PurchaseItemsDTO dto) {
+		mybatis.insert("Approval.insertPurchaseItem", dto);
+	}
+	
+	public void insertPurchaseAttachment(PurchaseAttachmentsDTO dto) {
+		mybatis.insert("Approval.insertPurchaseAttachment", dto);
 	}
 }

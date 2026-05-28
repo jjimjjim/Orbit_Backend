@@ -12,10 +12,13 @@ public class PurchaseDTO extends DraftDocumentsDTO {
 	
 	private List<ApprovalLinesDTO> approvers;
     private List<ApprovalCcDTO> referrers;
+    private List<PurchaseItemsDTO> items;
+    private List<PurchaseAttachmentsDTO> attachments;
     
     public PurchaseDTO() {}
 	public PurchaseDTO(Long purchase_seq, Long doc_seq, Double total_amount, String purpose, String vendor,
-			String purchase_date, List<ApprovalLinesDTO> approvers, List<ApprovalCcDTO> referrers) {
+			String purchase_date, List<ApprovalLinesDTO> approvers, List<ApprovalCcDTO> referrers,
+			List<PurchaseItemsDTO> items, List<PurchaseAttachmentsDTO> attachments) {
 		super();
 		this.purchase_seq = purchase_seq;
 		this.doc_seq = doc_seq;
@@ -25,6 +28,8 @@ public class PurchaseDTO extends DraftDocumentsDTO {
 		this.purchase_date = purchase_date;
 		this.approvers = approvers;
 		this.referrers = referrers;
+		this.items = items;
+		this.attachments = attachments;
 	}
 	public Long getPurchase_seq() {
 		return purchase_seq;
@@ -73,5 +78,17 @@ public class PurchaseDTO extends DraftDocumentsDTO {
 	}
 	public void setReferrers(List<ApprovalCcDTO> referrers) {
 		this.referrers = referrers;
+	}
+	public List<PurchaseItemsDTO> getItems() {
+		return items;
+	}
+	public void setItems(List<PurchaseItemsDTO> items) {
+		this.items = items;
+	}
+	public List<PurchaseAttachmentsDTO> getAttachments() {
+		return attachments;
+	}
+	public void setAttachments(List<PurchaseAttachmentsDTO> attachments) {
+		this.attachments = attachments;
 	}
 }
