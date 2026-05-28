@@ -102,4 +102,8 @@ public class AdminService {
 	public void addDept(DepartmentsDTO dto) {
 		adminDao.addDept(dto);
 	}
+	
+	public void addTeam(DepartmentsDTO dto) {
+		adminDao.addTeam(dto);
+	}
 }

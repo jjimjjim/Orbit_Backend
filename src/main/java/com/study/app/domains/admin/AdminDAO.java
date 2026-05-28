@@ -15,4 +15,8 @@ public class AdminDAO {
 	public void addDept(DepartmentsDTO dto) {
 		batis.insert("Admin.addDept", dto);
 	}
+	
+	public void addTeam(DepartmentsDTO dto) {
+		batis.insert("Admin.addTeam", dto);
+	}
 }

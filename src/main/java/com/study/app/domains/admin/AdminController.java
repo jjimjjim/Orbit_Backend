@@ -113,4 +113,10 @@ public class AdminController {
 		return ResponseEntity.ok().build();
 	}
 	
+	@PostMapping("/hr/addTeam")
+	public ResponseEntity<Void> addTeam(@RequestBody DepartmentsDTO dto) {
+		adminServ.addTeam(dto);
+		return ResponseEntity.ok().build();
+	}
+	
 }
