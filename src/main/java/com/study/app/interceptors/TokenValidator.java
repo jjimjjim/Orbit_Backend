@@ -52,7 +52,8 @@ public class TokenValidator implements HandlerInterceptor{
 				String dept = userInfo.getDept_name();
 				String rank = userInfo.getRank_name();
 				String role = userInfo.getRole();
-
+				Long seq = userInfo.getDept_seq();
+				
 				String uri = request.getRequestURI();
 
 				boolean isAdmin = "ADMIN".equals(role) || "운영총괄본부".equals(dept) || "운영총괄팀".equals(dept);
