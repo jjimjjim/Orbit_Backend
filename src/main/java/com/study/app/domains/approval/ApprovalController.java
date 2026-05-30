@@ -1,11 +1,13 @@
 package com.study.app.domains.approval;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -59,5 +61,19 @@ public class ApprovalController {
 		
 		appServ.insertPayment(dto, files);
 		return ResponseEntity.ok().build();
+	}
+	
+	@GetMapping("/detail/{doc_type}/{doc_seq}")
+    public ResponseEntity<?> getDetail(@PathVariable String doc_type,
+            							@PathVariable Long doc_seq) {
+		
+		try {
+			Map<String, Object> result = appServ.getApprovalDetail(doc_type.toUpperCase(), doc_seq);
+			return ResponseEntity.ok(result);
+		}catch(Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.internalServerError().body(e.getMessage());
+		}
+        
 	}
 }
