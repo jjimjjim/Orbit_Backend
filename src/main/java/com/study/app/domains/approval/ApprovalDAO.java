@@ -194,7 +194,17 @@ public class ApprovalDAO {
 	
 	
 	
+	public List<DraftDocumentsDTO> getMyDoc(String loginId) {
+		return mybatis.selectList("Approval.getMyDoc", loginId);
+	}
 	
+	public List<DraftDocumentsDTO> getMyDocPage(Map<String, Object> param) {
+		return mybatis.selectList("Approval.getMyDocPage", param);
+	}
+	
+	public int getMyDocPageCount(Map<String, Object> param) {
+		return mybatis.selectOne("Approval.getMyDocPageCount", param);
+	}
 	
 	public List<DraftDocumentsDTO> getTempDoc(String loginId) {
 		return mybatis.selectList("Approval.getTempDoc", loginId);

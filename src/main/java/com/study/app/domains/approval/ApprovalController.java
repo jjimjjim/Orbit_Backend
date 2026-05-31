@@ -1,5 +1,6 @@
 package com.study.app.domains.approval;
 
+import com.study.app.domains.admin.AdminController;
 import java.util.List;
 import java.util.Map;
 
@@ -25,10 +26,15 @@ import com.study.app.domains.users.UsersService;
 @RequestMapping("/approval")
 public class ApprovalController {
 
+	private final AdminController adminController;
 	@Autowired
 	private UsersService usersServ;
 	@Autowired
 	private ApprovalService appServ;
+
+	ApprovalController(AdminController adminController) {
+		this.adminController = adminController;
+	}
 
 	@GetMapping("all")
 	public ResponseEntity<List<UsersDTO>> getAllEmployees(){
@@ -207,8 +213,20 @@ public class ApprovalController {
 	@GetMapping("/cc/page")
 	public ResponseEntity<Map<String, Object>> getCcDocumentsByPage(
 			@RequestAttribute String loginId, @RequestParam String status, @RequestParam Long cpage){
-		
 		Map<String, Object> result = appServ.getCcDocumentsByPage(loginId, status, cpage);
+		return ResponseEntity.ok(result);
+	}
+	
+	@GetMapping("/myDoc")
+	public ResponseEntity<List<DraftDocumentsDTO>> getMyDocuments(@RequestAttribute String loginId) {
+		List<DraftDocumentsDTO> list = appServ.getMyDocWithLine(loginId);
+		return ResponseEntity.ok(list);
+	}
+	
+	@GetMapping("/myDoc/page")
+	public ResponseEntity<Map<String, Object>> getMyDocumentsByPage(@RequestAttribute String loginId,
+			@RequestParam String status, @RequestParam Long cpage) {
+		Map<String, Object> result = appServ.getMyDocumentsByPage(loginId, status, cpage);
 		return ResponseEntity.ok(result);
 	}
 	

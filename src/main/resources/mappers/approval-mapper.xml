@@ -295,7 +295,28 @@
 	
 	
 	
+	<select id="getMyDoc" resultType="com.study.app.domains.approval.DraftDocumentsDTO">
+		select d.*, u.name as name 
+			from draft_documents d 
+			inner join users u on d.users_id = u.id
+			where d.users_id = #{loginId}
+			order by d.created_at desc
+	</select>
 	
+	<select id="getMyDocPage" resultType="com.study.app.domains.approval.DraftDocumentsDTO">
+		select * from (select row_number() over(order by d.created_at desc) rn, 
+			d.*, u.name as name
+			from draft_documents d
+			inner join users u on d.users_id = u.id
+			where d.users_id = #{loginId} and d.status = #{status}
+			)
+			where rn between #{start} and #{end}
+	</select>
+	
+	<select id="getMyDocPageCount" resultType="int">
+		select count(*) from draft_documents 
+			where users_id = #{loginId} and status = #{status}
+	</select>
 	
 	<select id="getTempDoc" resultType="com.study.app.domains.approval.DraftDocumentsDTO">
 		select * from draft_documents where users_id = #{loginId} and status = 'TEMP'
