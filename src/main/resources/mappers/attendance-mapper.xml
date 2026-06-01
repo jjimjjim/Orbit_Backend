@@ -11,6 +11,31 @@
     WHERE USERS_ID = #{users_id}
     AND WORK_DATE = TRUNC(SYSDATE)
 </select>
+<select id="getCntMonth" resultType="com.study.app.domains.attendance.AttendanceDTO">
+	SELECT 
+	  COUNT(*) AS work_days,
+	  ROUND(SUM(TOTAL_WORK_MIN) / 60, 1) AS total_hours,
+	  SUM(CASE WHEN TO_CHAR(CHECK_IN, 'HH24:MI') > '09:00' THEN 1 ELSE 0 END) AS late_cnt
+	FROM ATTENDANCE
+	WHERE USERS_ID = #{loginId}
+	AND TO_CHAR(WORK_DATE, 'YYYY-MM') = TO_CHAR(SYSDATE, 'YYYY-MM')
+</select>
+<!--<select id="getMonthLeave" resultType="Integer">
+	SELECT USED_DAYS
+	FROM LEAVE
+	WHERE USERS_ID = #{loginId}
+	AND YEAR = TO_NUMBER(TO_CHAR(SYSDATE, 'YYYY'))
+</select>-->
+<select id="getCntWeek" resultType="com.study.app.domains.attendance.AttendanceDTO">
+	SELECT
+	  COUNT(*) AS work_days,
+	  SUM(CASE WHEN TO_CHAR(CHECK_IN, 'HH24:MI') > '09:00' THEN 1 ELSE 0 END) AS late_cnt,
+	  ROUND(SUM(TOTAL_WORK_MIN) / 60, 1) AS overtime_hours
+	FROM ATTENDANCE
+	WHERE USERS_ID = #{loginId}
+	AND WORK_DATE >= TRUNC(SYSDATE, 'IW')
+	AND WORK_DATE < TRUNC(SYSDATE, 'IW') + 7
+</select>
 <update id="checkOut">
 	UPDATE ATTENDANCE
 	SET CHECK_OUT = SYSTIMESTAMP,

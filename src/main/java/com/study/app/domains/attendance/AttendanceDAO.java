@@ -21,4 +21,12 @@ public class AttendanceDAO {
 	public int checkOut(AttendanceDTO dto) {
 		return mybatis.update("Attendance.checkOut",dto);
 	}
+	
+	public AttendanceDTO getCntMonth(String loginId) {
+		return mybatis.selectOne("Attendance.getCntMonth",loginId);
+	}
+	
+	public AttendanceDTO getCntWeek(String loginId) {
+		return mybatis.selectOne("Attendance.getLateCntWeek",loginId);
+	}
 }

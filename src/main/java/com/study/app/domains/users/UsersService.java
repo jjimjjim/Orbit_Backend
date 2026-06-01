@@ -26,4 +26,8 @@ public class UsersService {
 	public UsersDTO getMyPageInfo(String loginId) {
 		return dao.getMyPageInfo(loginId);
 	}
+	
+	public int updateMyPageInfo(UsersDTO dto) {
+		return dao.updateMyPageInfo(dto);
+	}
 }

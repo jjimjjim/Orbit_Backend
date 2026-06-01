@@ -64,6 +64,10 @@ public class UsersDAO {
 		return batis.selectOne("Users.getMyPageInfo", loginId);
 	}
 	
+	public int updateMyPageInfo(UsersDTO dto) {
+		return batis.update("Users.updateMyPageInfo",dto);
+	}
+	
 	
 
 }
