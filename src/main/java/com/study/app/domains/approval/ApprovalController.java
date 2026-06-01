@@ -110,7 +110,39 @@ public class ApprovalController {
 		return ResponseEntity.ok().build();
 	}
 	
+	@PutMapping("update/vacation/{doc_seq}")
+	public ResponseEntity<Void> updateVacation(@PathVariable Long doc_seq,
+												@RequestBody VacationDTO dto){
+		
+		appServ.updateVacation(doc_seq, dto);
+		return ResponseEntity.ok().build();
+	}
 	
+	@PutMapping("update/general/{doc_seq}")
+	public ResponseEntity<Void> updateGeneral(@PathVariable Long doc_seq,
+												@RequestBody GeneralDTO dto){
+		
+		appServ.updateGeneral(doc_seq, dto);
+		return ResponseEntity.ok().build();
+	}
+	
+	@PutMapping("update/payment/{doc_seq}")
+	public ResponseEntity<Void> updatePayment(@PathVariable Long doc_seq,
+												@RequestPart("dto") PaymentDTO dto,
+												@RequestPart(value = "files", required = false) List<MultipartFile> files){
+		
+		appServ.updatePayment(doc_seq, dto, files);
+		return ResponseEntity.ok().build();
+	}
+	
+	@PutMapping("update/purchase/{doc_seq}")
+	public ResponseEntity<Void> updatePurchase(@PathVariable Long doc_seq,
+												@RequestPart("dto") PurchaseDTO dto,
+												@RequestPart(value = "files", required = false) List<MultipartFile> files){
+		
+		appServ.updatePurchase(doc_seq, dto, files);
+		return ResponseEntity.ok().build();
+	}
 	
 	
 	

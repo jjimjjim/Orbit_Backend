@@ -21,8 +21,8 @@
 	</insert>
 	
 	<insert id="insertVacationDetail">
-		insert into vacation values (vac_seq.nextval, #{doc_seq}, #{vac_type}, #{start_date}, 
-		#{end_date}, #{days}, #{reason})
+		insert into vacation values (vac_seq.nextval, #{doc_seq}, #{vac_type}, #{start_date, jdbcType=DATE}, 
+		#{end_date, jdbcType=DATE}, #{days}, #{reason})
 	</insert>
 	
 	<insert id="insertGeneralDetail">
@@ -186,28 +186,66 @@
 		where d.doc_seq = #{doc_seq}
 	</select>
 	
+	<update id="updateDraftDocument">
+		update draft_documents 
+		set title = #{title}, status = #{status}, is_temp = #{is_temp}, 
+			temp_expires_at = TO_DATE(#{temp_expires_at, jdbcType=VARCHAR}, 'YYYY-MM-DD'), 
+			created_at = sysdate, updated_at = sysdate
+		where doc_seq = #{doc_seq}
+	</update>
 	
+	<delete id="deleteApprovalLines">
+		delete from approval_lines where doc_seq  = #{doc_seq}
+	</delete>
 	
+	<delete id="deleteReferrers">
+		delete from approval_cc where doc_seq = #{doc_seq}
+	</delete>
 	
+	<update id="updateVacationDetail">
+		update vacation 
+		set vac_type = #{vac_type}, start_date = #{start_date, jdbcType=DATE}, end_date = #{end_date, jdbcType=DATE}, 
+			days = #{days}, reason = #{reason}
+		where doc_seq = #{doc_seq}
+	</update>
 	
+	<update id="updateGeneralDetail">
+		update general set purpose = #{purpose, jdbcType=VARCHAR}, content = #{content, jdbcType=VARCHAR} where doc_seq = #{doc_seq}
+	</update>
 	
+	<select id="selectPay_seq" resultType="long">
+		select pay_seq from payment where doc_seq = #{doc_seq}
+	</select>
 	
+	<delete id="deletePaymentItems">
+		delete from payment_items where pay_seq = #{pay_seq}
+	</delete>
 	
+	<update id="updatePaymentDetail">
+		update payment 
+		set pay_date = #{pay_date, jdbcType=DATE}, total_amount = #{total_amount, jdbcType=NUMERIC}, 
+			pay_reason = #{pay_reason, jdbcType=VARCHAR}, account_info = #{account_info, jdbcType=VARCHAR}
+		where pay_seq = #{pay_seq}
+	</update>
 	
+	<select id="selectPurchase_seq" resultType="long">
+		select purchase_seq from purchase where doc_seq = #{doc_seq}
+	</select>
 	
+	<delete id="deletePurchaseItems">
+		delete from purchase_items where purchase_seq = #{purchase_seq}
+	</delete>
 	
+	<delete id="deletePurchaseAttachments">
+		delete from purchase_attachments where purchase_seq = #{purchase_seq}
+	</delete>
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	<update id="updatePurchaseDetail">
+		update purchase 
+		set total_amount = #{total_amount, jdbcType=NUMERIC}, purpose = #{purpose, jdbcType=VARCHAR}, 
+		vendor = #{vendor, jdbcType=VARCHAR}, purchase_date = #{purchase_date, jdbcType=DATE}
+		where purchase_seq = #{purchase_seq}
+	</update>
 	
 	
 	

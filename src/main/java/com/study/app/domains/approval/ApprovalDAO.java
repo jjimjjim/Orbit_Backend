@@ -152,17 +152,53 @@ public class ApprovalDAO {
 		return mybatis.selectOne("Approval.selectVacationDays", doc_seq);
 	}
 	
+	public void updateDraftDocument(DraftDocumentsDTO dto) {
+		mybatis.update("Approval.updateDraftDocument", dto);
+	}
 	
+	public void deleteApprovalLines(Long doc_seq) {
+		mybatis.delete("Approval.deleteApprovalLines", doc_seq);
+	}
 	
+	public void deleteReferrers(Long doc_seq) {
+		mybatis.delete("Approval.deleteReferrers", doc_seq);
+	}
 	
+	public void updateVacationDetail(VacationDTO dto) {
+		mybatis.update("Approval.updateVacationDetail", dto);
+	}
 	
+	public void updateGeneralDetail(GeneralDTO dto) {
+		mybatis.update("Approval.updateGeneralDetail", dto);
+	}
 	
+	public Long selectPay_seq(Long doc_seq) {
+		return mybatis.selectOne("Approval.selectPay_seq", doc_seq);
+	}
 	
+	public void deletePaymentItems(Long pay_seq) {
+		mybatis.delete("Approval.deletePaymentItems", pay_seq);
+	}
 	
+	public void updatePaymentDetail(PaymentDTO dto) {
+		mybatis.update("Approval.updatePaymentDetail", dto);
+	}
 	
+	public Long selectPurchase_seq(Long doc_seq) {
+		return mybatis.selectOne("Approval.selectPurchase_seq", doc_seq);
+	}
 	
+	public void deletePurchaseItems(Long purchase_seq) {
+		mybatis.delete("Approval.deletePurchaseItems", purchase_seq);
+	}
 	
+	public void deletePurchaseAttachments(Long purchase_seq) {
+		mybatis.delete("Approval.deletePurchaseAttachments", purchase_seq);
+	}
 	
+	public void updatePurchaseDetail(PurchaseDTO dto) {
+		mybatis.update("Approval.updatePurchaseDetail", dto);
+	}
 	
 	
 	
