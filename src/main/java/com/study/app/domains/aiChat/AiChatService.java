@@ -183,6 +183,16 @@ public class AiChatService {
 	public List<AiMessagesDTO> detailChat(Long chat_seq) {
 		return aiDao.detailChat(chat_seq);
 	}
+	
+	public void insertQuestion(String loginId, 
+			AiUnansweredQuestionsDTO dto) {
+		Map<String, Object> params = new HashMap<>();
+		
+		params.put("users_id", loginId);
+		params.put("dto", dto);
+		
+		aiDao.insertQuestion(params);
+	}
 
-
+	
 }

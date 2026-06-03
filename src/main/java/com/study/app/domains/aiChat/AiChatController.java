@@ -6,7 +6,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,5 +35,12 @@ public class AiChatController {
 	@GetMapping("/detailChat")
 	public ResponseEntity<List<AiMessagesDTO>> detailChat(@RequestParam Long chat_seq) {
 		return ResponseEntity.ok(aiServ.detailChat(chat_seq));
+	}
+	
+	@PostMapping("/insertQuestion")
+	public ResponseEntity<Void> insertQuestion(@RequestAttribute String loginId,
+			@RequestBody AiUnansweredQuestionsDTO dto) {
+		
+		return ResponseEntity.ok().build();
 	}
 }

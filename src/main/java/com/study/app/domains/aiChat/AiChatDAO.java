@@ -1,6 +1,7 @@
 package com.study.app.domains.aiChat;
 
 import java.util.List;
+import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,5 +31,9 @@ public class AiChatDAO {
 	
 	public List<AiMessagesDTO> detailChat(Long chat_seq) {
 		return batis.selectList("AiChat.detailChat", chat_seq);
+	}
+	
+	public void insertQuestion(Map<String, Object> params) {
+		batis.insert("AiChat.insertQuestion", params);
 	}
 }

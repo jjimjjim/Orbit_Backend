@@ -27,4 +27,10 @@
 		select role, content from ai_messages where chat_seq = #{chat_seq}
 			order by msg_seq
 	</select>
+	
+	<insert id="insertQuestion">
+		insert into ai_unanswered_questions 
+		(question_seq, users_id, category, question, dept_seq, status, created_at)
+		values ()
+	</insert>
 </mapper>
