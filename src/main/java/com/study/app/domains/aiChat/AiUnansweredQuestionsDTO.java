@@ -13,11 +13,15 @@ public class AiUnansweredQuestionsDTO {
 	private String status;
 	private String answer_at;
 	private String created_at;
+	private Long chat_seq;
+	private String user_name;
+	private String admin_name;
 	
 	public AiUnansweredQuestionsDTO() {}
 	
 	public AiUnansweredQuestionsDTO(Long question_seq, String users_id, String category, String question, Long dept_seq,
-			String handle_answer, String users_handle_id, String status, String answer_at, String created_at) {
+			String handle_answer, String users_handle_id, String status, String answer_at, String created_at, Long chat_seq,
+			String user_name, String admin_name) {
 		super();
 		this.question_seq = question_seq;
 		this.users_id = users_id;
@@ -29,6 +33,9 @@ public class AiUnansweredQuestionsDTO {
 		this.status = status;
 		this.answer_at = answer_at;
 		this.created_at = created_at;
+		this.chat_seq = chat_seq;
+		this.user_name = user_name;
+		this.admin_name = admin_name;
 	}
 	
 	public Long getQuestion_seq() {
@@ -90,5 +97,23 @@ public class AiUnansweredQuestionsDTO {
 	}
 	public void setCreated_at(String created_at) {
 		this.created_at = created_at;
+	}
+	public Long getChat_seq() {
+		return chat_seq;
+	}
+	public void setChat_seq(Long chat_seq) {
+		this.chat_seq = chat_seq;
+	}
+	public String getUser_name() {
+		return user_name;
+	}
+	public void setUser_name(String user_name) {
+		this.user_name = user_name;
+	}
+	public String getAdmin_name() {
+		return admin_name;
+	}
+	public void setAdmin_name(String admin_name) {
+		this.admin_name = admin_name;
 	}
 }

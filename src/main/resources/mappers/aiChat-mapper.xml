@@ -24,7 +24,40 @@
 	</select>
 	
 	<select id="detailChat" resultType="com.study.app.domains.aiChat.AiMessagesDTO">
-		select role, content from ai_messages where chat_seq = #{chat_seq}
-			order by msg_seq
+		select a.role, a.content, q.status
+		from ai_messages a
+		left join ai_unanswered_questions q on a.chat_seq = q.chat_seq
+		where a.chat_seq = #{chat_seq}
+			order by a.msg_seq
 	</select>
+	
+	<insert id="insertQuestion">
+		insert into ai_unanswered_questions 
+		(question_seq, users_id, category, question, dept_seq, status, created_at, chat_seq)
+		values (question_seq.nextval, #{users_id}, #{dto.category}, #{dto.question}, #{dto.dept_seq}, 'PENDING', sysdate, #{dto.chat_seq})
+	</insert>
+	
+	<delete id="deleteQuestions">
+		delete from ai_unanswered_questions where chat_seq = #{chat_seq}
+	</delete>
+	
+	<delete id="deleteAiMessages">
+		delete from ai_messages where chat_seq = #{chat_seq}
+	</delete>
+
+	<delete id="deleteAiChat">
+		delete from ai_chat where chat_seq = #{chat_seq}
+	</delete>
+	
+	<select id="myQuestions" resultType="com.study.app.domains.aiChat.AiUnansweredQuestionsDTO">
+		select q.*,
+			u.name as name from ai_unanswered_questions q 
+			left join users u on q.users_handle_id = u.id
+			where q.users_id = #{loginId}
+		order by q.created_at
+	</select>
+	
+	<delete id="deleteMyQuestions">
+		delete from ai_unanswered_questions where question_seq = #{question_seq}
+	</delete>
 </mapper>

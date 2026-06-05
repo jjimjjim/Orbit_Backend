@@ -155,11 +155,217 @@ public class AdminService {
 		return result;
 	}
 	
+	public List<DocumentsDTO> getAllDocs(){
+		return docDao.getAllDocs();
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	public List<AiUnansweredQuestionsDTO> getAiQuestions() {
 		return adminDao.getAiQuestions();
 	}
 	
-	public List<DocumentsDTO> getAllDocs(){
-		return docDao.getAllDocs();
+	public List<AiUnansweredQuestionsDTO> myDeptQuestion(Long dept_seq, String auth_group) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("dept_seq", dept_seq);
+		params.put("auth_group", auth_group);
+		return adminDao.myDeptQuestion(params);
+	}
+	
+	public void insertAnswer(Long question_seq, String handle_answer) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("question_seq", question_seq);
+		params.put("handle_answer", handle_answer);
+		adminDao.insertAnswer(params);
 	}
 }

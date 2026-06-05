@@ -156,12 +156,7 @@ public class AdminController {
 		Map<String, Object> result = adminServ.joinResignCount(); 
 		return ResponseEntity.ok(result); 
 	}
-	
-	@GetMapping("/aiQuestions")
-	public ResponseEntity<List<AiUnansweredQuestionsDTO>> getAiQuestions() {
-		return ResponseEntity.ok(adminServ.getAiQuestions());
-	}
-	
+
 	@GetMapping("getAllDocs")
 	public ResponseEntity<List<DocumentsDTO>> getAllDocs(){
 		List<DocumentsDTO> resp = adminServ.getAllDocs();
@@ -191,4 +186,208 @@ public class AdminController {
         docServ.deleteDoc(document_seq);
         return ResponseEntity.ok().build();
     }
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	@GetMapping("/aiQuestions")
+	public ResponseEntity<List<AiUnansweredQuestionsDTO>> getAiQuestions() {
+		return ResponseEntity.ok(adminServ.getAiQuestions());
+	}
+	
+	@GetMapping("/ai/myDeptQuestion")
+	public ResponseEntity<List<AiUnansweredQuestionsDTO>> myDeptQuestion(
+			@RequestParam Long dept_seq, @RequestParam String auth_group) {
+		return ResponseEntity.ok(adminServ.myDeptQuestion(dept_seq, auth_group));
+	}
+	
+	@PostMapping("/ai/insertAnswer")
+	public ResponseEntity<Void> insertAnswer(
+			@RequestParam Long question_seq, @RequestParam String handle_answer) {
+		adminServ.insertAnswer(question_seq, handle_answer);
+		return ResponseEntity.ok().build();
+	}
+
 }

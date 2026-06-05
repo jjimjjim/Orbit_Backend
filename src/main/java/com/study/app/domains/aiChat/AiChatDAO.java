@@ -1,6 +1,7 @@
 package com.study.app.domains.aiChat;
 
 import java.util.List;
+import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,5 +31,29 @@ public class AiChatDAO {
 	
 	public List<AiMessagesDTO> detailChat(Long chat_seq) {
 		return batis.selectList("AiChat.detailChat", chat_seq);
+	}
+	
+	public void insertQuestion(Map<String, Object> params) {
+		batis.insert("AiChat.insertQuestion", params);
+	}
+	
+	public void deleteQuestions(Long chat_seq) {
+		batis.delete("AiChat.deleteQuestions", chat_seq);
+	}
+	
+	public void deleteAiMessages(Long chat_seq) {
+		batis.delete("AiChat.deleteAiMessages", chat_seq);
+	}
+	
+	public void deleteAiChat(Long chat_seq) {
+		batis.delete("AiChat.deleteAiChat", chat_seq);
+	}
+	
+	public List<AiUnansweredQuestionsDTO> myQuestions(String loginId) {
+		return batis.selectList("AiChat.myQuestions", loginId);
+	}
+	
+	public void deleteMyQuestions(Long question_seq) {
+		batis.delete("AiChat.deleteMyQuestions", question_seq);
 	}
 }
