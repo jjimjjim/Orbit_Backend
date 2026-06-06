@@ -176,12 +176,15 @@ public class AiChatService {
 		return aiResult;
 	}
 
-	public void embedDocument(Long fileSeq, Long docementSeq, String signedUrl) {
+	public void embedDocument(Long file_seq, Long document_seq, 
+			String fileName, String signedUrl, String mimeType) {
 		Map<String, Object> body = new HashMap<>();
 
-		body.put("fileSeq", fileSeq);
-		body.put("docementSeq", docementSeq);
+		body.put("file_seq", file_seq);
+		body.put("document_seq", document_seq);
+		body.put("fileName", fileName);
 		body.put("signedUrl", signedUrl);
+		body.put("mimeType", mimeType);
 
 		restClient.post()
 		.uri("/document/embed")
