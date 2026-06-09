@@ -94,4 +94,12 @@ public class MeetingRoomsService {
 	public List<RoomRsvnDTO> getReservations(String date, Long room_seq) {
 		return rsvnDao.getReservations(date, room_seq);
 	}
+	
+	public List<RoomRsvnDTO> getMeetRsvnDetail(Long rsvn_seq) {
+		return rsvnDao.getMeetRsvnDetail(rsvn_seq);
+	}
+	
+	public List<String> getOccupiedTimes(Long room_seq, String date, Long rsvn_seq) {
+		return rsvnDao.getOccupiedTimes(room_seq, date, rsvn_seq);
+	}
 }

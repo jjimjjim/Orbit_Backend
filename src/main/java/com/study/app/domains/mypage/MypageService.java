@@ -9,6 +9,7 @@ import com.study.app.domains.aiChat.AiChatDAO;
 import com.study.app.domains.aiChat.AiUnansweredQuestionsDTO;
 import com.study.app.domains.annualLeave.AnnualLeaveDAO;
 import com.study.app.domains.annualLeave.AnnualLeaveDTO;
+import com.study.app.domains.meetingRooms.MeetingRoomsDTO;
 import com.study.app.domains.meetingRooms.MeetingRoomsService;
 import com.study.app.domains.meetingRooms.RoomRsvnDTO;
 
@@ -38,4 +39,15 @@ public class MypageService {
 		return roomServ.getAllMyMeetRsvn(loginId);
 	}
 	
+	public List<RoomRsvnDTO> getMeetRsvnDetail(Long rsvn_seq) {
+		return roomServ.getMeetRsvnDetail(rsvn_seq);
+	}
+	
+	public List<MeetingRoomsDTO> getAllRooms() {
+		return roomServ.getAllRooms();
+	}
+	
+	public List<String> getOccupiedTimes(Long room_seq, String date, Long rsvn_seq) {
+		return roomServ.getOccupiedTimes(room_seq, date, rsvn_seq);
+	}
 }

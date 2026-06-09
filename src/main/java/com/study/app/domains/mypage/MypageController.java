@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.study.app.domains.aiChat.AiUnansweredQuestionsDTO;
 import com.study.app.domains.annualLeave.AnnualLeaveDTO;
+import com.study.app.domains.meetingRooms.MeetingRoomsDTO;
 import com.study.app.domains.meetingRooms.RoomRsvnDTO;
 
 @RestController
@@ -43,5 +45,26 @@ public class MypageController {
 	public ResponseEntity<List<RoomRsvnDTO>> getAllMyMeetRsvn(@RequestAttribute String loginId){
 		List<RoomRsvnDTO> list = mypageServ.getAllMyMeetRsvn(loginId);
 		return ResponseEntity.ok(list);
+	}
+	
+	@GetMapping("getMeetRsvnDetail/{rsvn_seq}")
+	public ResponseEntity<List<RoomRsvnDTO>> getMeetRsvnDetail(@PathVariable Long rsvn_seq) {
+		List<RoomRsvnDTO> list = mypageServ.getMeetRsvnDetail(rsvn_seq);
+		return ResponseEntity.ok(list);
+	}
+	
+	@GetMapping("getAllRooms")
+	public ResponseEntity<List<MeetingRoomsDTO>> getAllRooms() {
+		List<MeetingRoomsDTO> list = mypageServ.getAllRooms();
+		return ResponseEntity.ok(list);
+	}
+	
+	@GetMapping("getOccupiedTimes")
+	public ResponseEntity<List<String>> getOccupiedTimes(@RequestParam Long room_seq,
+														 @RequestParam String date,
+														 @RequestParam Long rsvn_seq) {
+		
+		List<String> resp = mypageServ.getOccupiedTimes(room_seq, date, rsvn_seq);
+		return ResponseEntity.ok(resp);
 	}
 }

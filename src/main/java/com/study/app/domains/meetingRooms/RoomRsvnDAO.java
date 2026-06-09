@@ -15,7 +15,7 @@ public class RoomRsvnDAO {
 	private SqlSessionTemplate mybatis;
 	
 	public List<Long> selectRsvnSeqByRoomSeq(Long room_seq) {
-		return mybatis.selectOne("RoomRsvn.selectRsvnSeqByRoomSeq", room_seq);
+		return mybatis.selectList("RoomRsvn.selectRsvnSeqByRoomSeq", room_seq);
 	}
 	
 	public void deleteRsvnMember(List<Long> rsvnList) {
@@ -43,5 +43,17 @@ public class RoomRsvnDAO {
 		params.put("date", date);
 		params.put("room_seq", room_seq);
 		return mybatis.selectList("RoomRsvn.getReservations", params);
+	}
+	
+	public List<RoomRsvnDTO> getMeetRsvnDetail(Long rsvn_seq) {
+		return mybatis.selectList("RoomRsvn.getMeetRsvnDetail", rsvn_seq);
+	}
+	
+	public List<String> getOccupiedTimes(Long room_seq, String date, Long rsvn_seq) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("room_seq", room_seq);
+		params.put("date", date);
+		params.put("rsvn_seq", rsvn_seq);
+		return mybatis.selectList("RoomRsvn.getOccupiedTimes", params);
 	}
 }
