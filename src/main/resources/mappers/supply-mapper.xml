@@ -11,7 +11,7 @@
 	    <selectKey keyProperty="req_seq" resultType="long" order="BEFORE">
 	        SELECT REQ_SEQ.NEXTVAL FROM DUAL
 	    </selectKey>
-	    INSERT INTO SUPPLY_REQUEST VALUES (#{req_seq}, #{users_id}, SYSDATE, #{reason}, #{status})
+	    INSERT INTO SUPPLY_REQUEST VALUES (#{req_seq}, #{users_id}, #{req_date}, #{reason}, #{status})
 	</insert>
 	<!--신청된 비품 리스트-->
 	<insert id="supplyRequestItems">
