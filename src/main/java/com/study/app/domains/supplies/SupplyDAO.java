@@ -35,6 +35,9 @@ public class SupplyDAO {
 		return mybatis.update("Supply.decreaseStock",dto);
 	}
 	
+	//비품 대여 이력 관리
+	
+	
 	/*비품 신청 & 신청된 비품 리스트*/
 	public int supplyRequest(SupplyRequestDTO dto) {
 		return mybatis.insert("Supply.supplyRequest",dto);

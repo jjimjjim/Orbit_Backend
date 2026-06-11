@@ -26,29 +26,42 @@
     </resultMap>
     
 	<select id="getAdminRequestList" resultMap="adminSupplyRequestMap">
-	    SELECT * FROM (
-	        SELECT ROWNUM AS rn, a.* FROM (
-	            SELECT
-	                r.REQ_SEQ, r.REQ_DATE, r.USERS_ID, u.NAME,
-	                r.REASON, r.STATUS, s.SUPPLY_NAME,
-	                i.ITEM_SEQ, i.SUPPLY_SEQ, i.EA, i.USE_TYPE
-	            FROM SUPPLY_REQUEST r
-	            JOIN SUPPLY_REQUEST_ITEMS i ON r.REQ_SEQ = i.REQ_SEQ
-	            JOIN SUPPLIES s ON i.SUPPLY_SEQ = s.SUPPLY_SEQ
-	            LEFT JOIN USERS u ON r.USERS_ID = u.ID
-	            <where>
-	                <if test="keyword != null and keyword != ''">
-	                    AND (s.SUPPLY_NAME LIKE '%' || #{keyword} || '%'
-	                    OR u.NAME LIKE '%' || #{keyword} || '%')
-	                </if>
-	                <if test="status != null and status != ''">
-	                    AND r.STATUS = #{status}
-	                </if>
-	            </where>
-	            ORDER BY r.REQ_DATE DESC, r.REQ_SEQ DESC
-	        ) a
-	    )
-	    WHERE rn BETWEEN #{start} AND #{end}
+		 SELECT
+	        r.REQ_SEQ, r.REQ_DATE, r.USERS_ID, u.NAME,
+	        r.REASON, r.STATUS,
+	        i.ITEM_SEQ, i.SUPPLY_SEQ, i.EA, i.USE_TYPE,
+	        s.SUPPLY_NAME
+	    FROM (
+	        SELECT * FROM (
+	            SELECT ROWNUM AS rn, a.* FROM (
+	                SELECT r.REQ_SEQ, r.REQ_DATE, r.USERS_ID, r.REASON, r.STATUS
+	                FROM SUPPLY_REQUEST r
+	                LEFT JOIN USERS u ON r.USERS_ID = u.ID
+	                <where>
+	                    <if test="keyword != null and keyword != ''">
+	                        AND (
+	                            u.NAME LIKE '%' || #{keyword} || '%'
+	                            OR r.REQ_SEQ IN (
+	                                SELECT i2.REQ_SEQ
+	                                FROM SUPPLY_REQUEST_ITEMS i2
+	                                JOIN SUPPLIES s2 ON i2.SUPPLY_SEQ = s2.SUPPLY_SEQ
+	                                WHERE s2.SUPPLY_NAME LIKE '%' || #{keyword} || '%'
+	                            )
+	                        )
+	                    </if>
+	                    <if test="status != null and status != ''">
+	                        AND r.STATUS = #{status}
+	                    </if>
+	                </where>
+	                ORDER BY r.REQ_DATE DESC, r.REQ_SEQ DESC
+	            ) a
+	        )
+	        WHERE rn BETWEEN #{start} AND #{end}
+	    ) r
+	    JOIN USERS u ON r.USERS_ID = u.ID
+	    JOIN SUPPLY_REQUEST_ITEMS i ON r.REQ_SEQ = i.REQ_SEQ
+	    JOIN SUPPLIES s ON i.SUPPLY_SEQ = s.SUPPLY_SEQ
+	    ORDER BY r.REQ_DATE DESC, r.REQ_SEQ DESC, i.ITEM_SEQ
 	</select>
 	
 	<!-- 전체 카운트 -->
@@ -94,4 +107,26 @@
 	    WHERE SUPPLY_SEQ = #{supply_seq}
 	    AND STOCK_QTY >= #{ea} 
 	</update>
+	<!--비품 대여 이력-->
+	<select id="supplyRentalList" resultType="com.study.app.domains.supplies.SupplyRentalDTO">
+		SELECT * FROM (
+	        SELECT ROWNUM AS rn, a.* FROM (
+	            SELECT
+	                r.RENTAL_SEQ,
+	                s.SUPPLY_NAME,
+	                s.CATEGORY,
+	                s.SUPPLY_CODE,
+	                d.DEPT_NAME,
+	                u.NAME,
+	                r.RENTAL_DATE,
+	                r.RETURN_DATE
+	            FROM RENTAL r
+	            JOIN SUPPLIES s ON r.SUPPLY_SEQ = s.SUPPLY_SEQ
+	            JOIN USERS u ON r.USERS_ID = u.ID
+	            JOIN DEPT d ON r.DEPT_SEQ = d.DEPT_SEq
+	            ORDER BY r.RENTAL_DATE DESC
+	        ) a
+	    )
+	    WHERE rn BETWEEN #{start} AND #{end}
+	</select>
 </mapper>
