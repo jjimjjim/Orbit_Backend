@@ -29,11 +29,15 @@ public class ProjectsDAO {
 		return batis.selectList("Projects.getAllProject", loginId);
 	}
 	
-	public void projectUpdate(ProjectsDTO dto) {
-		batis.update("Projects.projectUpdate", dto);
+	public void updateProject(ProjectsDTO dto) {
+		batis.update("Projects.updateProject", dto);
 	}
 	
 	public void deleteProjectMembers(Long project_seq) {
 		batis.delete("Projects.deleteProjectMembers", project_seq);
+	}
+	
+	public void deleteProject(Long project_seq) {
+		batis.delete("Projects.deleteProject", project_seq);
 	}
 }

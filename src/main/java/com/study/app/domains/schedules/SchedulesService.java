@@ -92,4 +92,8 @@ public class SchedulesService {
 	public void deleteProjectMemberSchedule(Long project_seq) {
 		schedDAO.deleteProjectMemberSchedule(project_seq);
 	}
+	
+	public void deleteProjectScheduleBySeq(Long project_seq) {
+		schedDAO.deleteProjectScheduleBySeq(project_seq);
+	}
 }

@@ -68,4 +68,8 @@ public class SchedulesDAO {
 		mybatis.delete("Schedules.deleteProjectMemberSchedule", ref_seq);
 	}
 	
+	public void deleteProjectScheduleBySeq(Long ref_seq) {
+		mybatis.delete("Schedules.deleteProjectScheduleBySeq", ref_seq);
+	}
+	
 }

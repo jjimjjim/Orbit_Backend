@@ -35,7 +35,7 @@
 			order by p.created_at
 	</select>
 	
-	<update id="projectUpdate">
+	<update id="updateProject">
 		update projects set project_name = #{project_name}, contents = #{contents},
 							start_date = #{start_date}, end_date = #{end_date}, 
 							status = 'PENDING' 
@@ -44,5 +44,9 @@
 	
 	<delete id="deleteProjectMembers">
 		delete from project_members where project_seq = #{project_seq}
+	</delete>
+	
+	<delete id="deleteProject">
+		delete from projects where project_seq = #{project_seq}
 	</delete>
 </mapper>

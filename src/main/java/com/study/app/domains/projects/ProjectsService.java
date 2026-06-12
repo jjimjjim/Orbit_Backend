@@ -28,7 +28,7 @@ public class ProjectsService {
 	private UsersDAO usersDao;
 	
 	@Autowired
-	private NotificationsService noriServ;
+	private NotificationsService notiServ;
 
 	public List<UsersDTO> allEmployee() {
 		return usersDao.getAllEmployees();
@@ -50,7 +50,7 @@ public class ProjectsService {
 			noti.setRef_seq(projectSeq);
 			noti.setUsers_id(member.getUsers_id());
 			noti.setContent("프로젝트 일정이 추가되었습니다.");
-			noriServ.insertProjectNoti(noti);
+			notiServ.insertProjectNoti(noti);
 		}
 		schedServ.insertMyProjectSchedule(loginId, dto);
 	}
@@ -60,8 +60,8 @@ public class ProjectsService {
 	}
 
 	@Transactional
-	public void projectUpdate(String loginId, ProjectsDTO dto) {
-		projectsDao.projectUpdate(dto);
+	public void updateProject(String loginId, ProjectsDTO dto) {
+		projectsDao.updateProject(dto);
 		
 		Long projectSeq = dto.getProject_seq();
 		
@@ -78,9 +78,17 @@ public class ProjectsService {
 			noti.setRef_seq(projectSeq);
 			noti.setUsers_id(member.getUsers_id());
 			noti.setContent("프로젝트 정보가 수정되었습니다.");
-			noriServ.insertProjectNoti(noti);
+			notiServ.insertProjectNoti(noti);
 		}
 		schedServ.insertMyProjectSchedule(loginId, dto);
+	}
+	
+	@Transactional
+	public void deleteProject(Long project_seq) {
+		notiServ.deleteProjectNotiBySeq(project_seq);
+		schedServ.deleteProjectScheduleBySeq(project_seq);
+		projectsDao.deleteProjectMembers(project_seq);
+		projectsDao.deleteProject(project_seq);
 	}
 
 

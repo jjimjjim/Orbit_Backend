@@ -3,6 +3,10 @@
 <mapper namespace="Notifications">
 
 	<insert id="insertProjectNoti">
-		insert into Notifications values(noti_seq.nextval, #{users_id}, 'PROJECT', #{content}, 'PROJECTS', #{ref_seq}, sysdate)
+		insert into Notifications values(noti_seq.nextval, #{users_id}, 'PROJECT', #{content}, 'PROJECT', #{ref_seq}, sysdate)
 	</insert>
+	
+	<delete id="deleteProjectNotiBySeq">
+		delete from notifications where ref_seq = #{ref_seq} and ref_type = 'PROJECT'
+	</delete>
 </mapper>

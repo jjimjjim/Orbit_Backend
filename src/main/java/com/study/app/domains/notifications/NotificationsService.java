@@ -19,4 +19,8 @@ public class NotificationsService {
 		stomp.convertAndSend("/sub/notification/" + dto.getUsers_id(), dto);
 		System.out.println("/sub/notification/" + " " + dto.getUsers_id() + " " + dto);
 	}
+	
+	public void deleteProjectNotiBySeq(Long project_seq) {
+		notiDao.deleteProjectNotiBySeq(project_seq);
+	}
 }

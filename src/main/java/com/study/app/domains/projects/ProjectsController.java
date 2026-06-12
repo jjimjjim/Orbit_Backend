@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
@@ -38,8 +40,14 @@ public class ProjectsController {
 	}
 	
 	@PutMapping("/projectUpdate")
-	public ResponseEntity<Void> projectUpdate(@RequestAttribute String loginId, @RequestBody ProjectsDTO dto) {
-		projectServ.projectUpdate(loginId, dto);
+	public ResponseEntity<Void> updateProject(@RequestAttribute String loginId, @RequestBody ProjectsDTO dto) {
+		projectServ.updateProject(loginId, dto);
+		return ResponseEntity.ok().build();
+	}
+	
+	@DeleteMapping("/projectDelete/{project_seq}")
+	public ResponseEntity<Void> deleteProject(@PathVariable Long project_seq) {
+		projectServ.deleteProject(project_seq);
 		return ResponseEntity.ok().build();
 	}
 	

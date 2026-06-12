@@ -15,5 +15,9 @@ public class NotificationsDAO {
 		batis.insert("Notifications.insertProjectNoti", dto);
 	}
 	
+	public void deleteProjectNotiBySeq(Long ref_seq) {
+		batis.delete("Notifications.deleteProjectNotiBySeq", ref_seq);
+	}
+	
 
 }
