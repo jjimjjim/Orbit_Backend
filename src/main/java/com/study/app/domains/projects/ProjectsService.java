@@ -49,6 +49,7 @@ public class ProjectsService {
 			NotificationsDTO noti = new NotificationsDTO();
 			noti.setRef_seq(projectSeq);
 			noti.setUsers_id(member.getUsers_id());
+			noti.setNoti_type("PROJECT");
 			noti.setContent("프로젝트 일정이 추가되었습니다.");
 			notiServ.insertProjectNoti(noti);
 		}
