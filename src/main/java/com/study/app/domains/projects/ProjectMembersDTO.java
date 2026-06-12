@@ -6,6 +6,8 @@ public class ProjectMembersDTO {
 	private Long project_seq;
 	private String users_id;
 	private String join_at;
+	private String name;
+	private String sysname;
 	
 	public ProjectMembersDTO() {}
 	
@@ -41,4 +43,16 @@ public class ProjectMembersDTO {
 	public void setJoin_at(String join_at) {
 		this.join_at = join_at;
 	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getSysname() {
+		return sysname;
+	}
+	public void setSysname(String sysname) {
+		this.sysname = sysname;
+	}	
 }

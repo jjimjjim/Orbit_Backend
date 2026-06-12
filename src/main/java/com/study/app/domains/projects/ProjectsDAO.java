@@ -24,4 +24,8 @@ public class ProjectsDAO {
 	public void insertProjectMembers(ProjectMembersDTO dto) {
 		batis.insert("Projects.insertProjectMembers", dto);
 	}
+	
+	public List<ProjectsDTO> getAllProject(String loginId) {
+		return batis.selectList("Projects.getAllProject", loginId);
+	}
 }

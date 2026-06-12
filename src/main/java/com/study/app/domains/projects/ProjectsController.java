@@ -25,10 +25,15 @@ public class ProjectsController {
 		return ResponseEntity.ok(projectServ.allEmployee());
 	}
 	
-	@PostMapping("insertProjectAndMembers")
+	@PostMapping("/insertProjectAndMembers")
 	public ResponseEntity<Void> insertProjectAndMembers(@RequestAttribute String loginId, @RequestBody ProjectsDTO dto) {
 		projectServ.insertProjectAndMembers(loginId, dto);
 		return ResponseEntity.ok().build();
+	}
+	
+	@GetMapping("/getAllProject")
+	public ResponseEntity<List<ProjectsDTO>> getAllProject(@RequestAttribute String loginId) {
+		return ResponseEntity.ok(projectServ.getAllProject(loginId));
 	}
 	
 	

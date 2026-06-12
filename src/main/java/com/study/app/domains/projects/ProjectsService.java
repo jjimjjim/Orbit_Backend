@@ -52,8 +52,11 @@ public class ProjectsService {
 			noti.setContent("프로젝트 일정이 추가되었습니다.");
 			noriServ.insertProjectNoti(noti);
 		}
-		schedServ.insertMyProjectSchedule(loginId, dto); 
-		
+		schedServ.insertMyProjectSchedule(loginId, dto);
+	}
+	
+	public List<ProjectsDTO> getAllProject(String loginId) {
+		return projectsDao.getAllProject(loginId);
 	}
 
 
