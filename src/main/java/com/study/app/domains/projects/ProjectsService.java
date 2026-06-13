@@ -133,6 +133,14 @@ public class ProjectsService {
 	public ProjectsDTO getProjectBySeq(Long project_seq) {
 		return kanbanDao.getProjectBySeq(project_seq);
 	}
+	
+	public void updateTask(KanbanTaskDTO dto) {
+		kanbanDao.updateTask(dto);
+	}
+	
+	public void deleteTask(Long task_seq) {
+		kanbanDao.deleteTask(task_seq);
+	}
 
 
 

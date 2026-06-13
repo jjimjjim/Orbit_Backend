@@ -78,6 +78,17 @@ public class ProjectsController {
 		return ResponseEntity.ok(projectServ.getProjectBySeq(project_seq));
 	}
 	
+	@PutMapping("/updateTask")
+	public ResponseEntity<Void> updateTask(@RequestBody KanbanTaskDTO dto) {
+		projectServ.updateTask(dto);
+		return ResponseEntity.ok().build();
+	}
+	
+	@DeleteMapping("/deleteTask/{task_seq}")
+	public ResponseEntity<Void> deleteTask(@PathVariable Long task_seq) {
+		projectServ.deleteTask(task_seq);
+		return ResponseEntity.ok().build();
+	}
 	
 	
 	

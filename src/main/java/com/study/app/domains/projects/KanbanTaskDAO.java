@@ -31,4 +31,12 @@ public class KanbanTaskDAO {
 	public ProjectsDTO getProjectBySeq(Long project_seq) {
 		return batis.selectOne("KanbanTask.getProjectBySeq", project_seq);
 	}
+	
+	public void updateTask(KanbanTaskDTO dto) {
+		batis.update("KanbanTask.updateTask", dto);
+	}
+	
+	public void deleteTask(Long task_seq) {
+		batis.delete("KanbanTask.deleteTask", task_seq);
+	}
 }

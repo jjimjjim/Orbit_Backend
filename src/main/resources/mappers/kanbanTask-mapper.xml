@@ -5,7 +5,7 @@
 	<select id="getKanbanTaskList" resultType="com.study.app.domains.projects.KanbanTaskDTO">
 		select k.*, u.name, u.sysname
 			from kanban_task k
-			left join users u on u.id = k.users_c_id
+			left join users u on u.id = k.users_pic_id
 			where k.project_seq = #{project_seq}
 			order by k.status, k.position
 	</select>
@@ -32,4 +32,15 @@
 	<select id="getProjectBySeq" resultType="com.study.app.domains.projects.ProjectsDTO">
 		select * from projects where project_seq = #{project_seq}
 	</select>
+	
+	<update id="updateTask">
+		update kanban_task set title = #{title}, content = #{content}, status = #{status},
+    						priority = #{priority}, users_pic_id = #{users_pic_id}, start_date = #{start_date},
+    						due_date = #{due_date}, updated_at = sysdate
+						where task_seq = #{task_seq}
+	</update>
+	
+	<delete id="deleteTask">
+		delete from kanban_task where task_seq = #{task_seq}
+	</delete>
 </mapper>
