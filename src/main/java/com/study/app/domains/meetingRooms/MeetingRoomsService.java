@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.study.app.domains.file.FileService;
+import com.study.app.domains.notifications.NotificationsDTO;
+import com.study.app.domains.notifications.NotificationsService;
 import com.study.app.domains.schedules.SchedulesService;
 
 @Service
@@ -22,6 +24,8 @@ public class MeetingRoomsService {
 	private FileService fileServ;
 	@Autowired
 	private SchedulesService scheServ;
+	@Autowired
+	private NotificationsService notiServ;
 	
 	public List<MeetingRoomsDTO> getAllRooms(){
 		return dao.getAllRooms();
@@ -66,9 +70,9 @@ public class MeetingRoomsService {
 		List<Long> rsvnList = rsvnDao.selectRsvnSeqByRoomSeq(room_seq);
 		if (rsvnList != null && !rsvnList.isEmpty()) {
 	        rsvnDao.deleteRsvnMember(rsvnList);
+	        notiServ.deleteNotiByRsvnList(rsvnList);
 	    }
 		rsvnDao.deleteRsvn(room_seq);
-		
 		dao.deleteMeetingRoom(room_seq);
 	}
 	
@@ -87,6 +91,14 @@ public class MeetingRoomsService {
 				member.setRsvn_seq(dto.getRsvn_seq());
 				rsvnDao.addRsvnMembers(member);
 				scheServ.addMeetingSchedules(dto, member.getUsers_id());
+				
+				NotificationsDTO noti = new NotificationsDTO();
+				noti.setRef_seq(dto.getRsvn_seq());
+				noti.setUsers_id(member.getUsers_id());
+				noti.setNoti_type("MEETING");
+				noti.setContent("회의 일정이 추가되었습니다.");
+				noti.setRef_type("MEETING");
+				notiServ.insertNoti(noti);
 			}
 		}
 	}
@@ -111,6 +123,8 @@ public class MeetingRoomsService {
 			for (RoomRsvnMemberDTO member : dto.getRemovedAttendees()) {
 				scheServ.deleteSchedule(dto.getRsvn_seq(), member.getUsers_id());
 				rsvnDao.removeRsvnMember(dto.getRsvn_seq(), member.getUsers_id());
+				
+				notiServ.deleteNotiBySeqAndId(dto.getRsvn_seq(), member.getUsers_id());
 			}
 		}
 		
@@ -118,6 +132,14 @@ public class MeetingRoomsService {
 			for (RoomRsvnMemberDTO member : dto.getAddedAttendees()) {
 				rsvnDao.insertAddMember(dto.getRsvn_seq(), member.getUsers_id());
 				scheServ.insertMeetAddMember(dto, member.getUsers_id());
+				
+				NotificationsDTO noti = new NotificationsDTO();
+				noti.setRef_seq(dto.getRsvn_seq());
+				noti.setUsers_id(member.getUsers_id());
+				noti.setNoti_type("MEETING");
+				noti.setContent("회의 정보가 수정되었습니다.");
+				noti.setRef_type("MEETING");
+				notiServ.insertNoti(noti);
 			}
 		}
 		scheServ.updateMeetSchedule(dto);
@@ -128,5 +150,6 @@ public class MeetingRoomsService {
 		scheServ.cancelMeetRsvn(rsvn_seq);
 		rsvnDao.deleteMeetMember(rsvn_seq);
 		rsvnDao.deleteMeetRsvn(rsvn_seq);
+		notiServ.deleteMeetingNotiBySeq(rsvn_seq);
 	}
 }
