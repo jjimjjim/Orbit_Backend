@@ -27,4 +27,8 @@ public class KanbanTaskDAO {
 	public void insertTask(KanbanTaskDTO dto) {
 		batis.insert("KanbanTask.insertTask", dto);
 	}
+	
+	public ProjectsDTO getProjectBySeq(Long project_seq) {
+		return batis.selectOne("KanbanTask.getProjectBySeq", project_seq);
+	}
 }

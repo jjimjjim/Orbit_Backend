@@ -130,6 +130,9 @@ public class ProjectsService {
 		kanbanDao.insertTask(dto);
 	}
 
+	public ProjectsDTO getProjectBySeq(Long project_seq) {
+		return kanbanDao.getProjectBySeq(project_seq);
+	}
 
 
 

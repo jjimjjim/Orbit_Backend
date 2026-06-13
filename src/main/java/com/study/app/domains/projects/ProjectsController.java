@@ -73,6 +73,10 @@ public class ProjectsController {
 		return ResponseEntity.ok().build();
 	}
 	
+	@GetMapping("/getProject/{project_seq}")
+	public ResponseEntity<ProjectsDTO> getProjectBySeq(@PathVariable Long project_seq) {
+		return ResponseEntity.ok(projectServ.getProjectBySeq(project_seq));
+	}
 	
 	
 	

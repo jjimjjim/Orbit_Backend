@@ -28,4 +28,8 @@
 		insert into kanban_task values(task_seq.nextval, #{project_seq}, #{title}, #{content}, #{status}, 
 		#{priority}, #{users_pic_id}, #{start_date}, #{due_date}, #{position}, #{users_c_id}, sysdate, null)
 	</insert>
+	
+	<select id="getProjectBySeq" resultType="com.study.app.domains.projects.ProjectsDTO">
+		select * from projects where project_seq = #{project_seq}
+	</select>
 </mapper>
