@@ -47,4 +47,8 @@
 	<update id="updateTaskStatus">
 		update kanban_task set status = #{status} where task_seq = #{task_seq}
 	</update>
+	
+	<delete id="deleteAllTask">
+		delete from kanban_task where project_seq = #{project_seq}
+	</delete>
 </mapper>

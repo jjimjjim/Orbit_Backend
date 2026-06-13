@@ -96,13 +96,4 @@ public class ProjectsController {
 		return ResponseEntity.ok().build();
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 }

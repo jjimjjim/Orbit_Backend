@@ -43,4 +43,8 @@ public class KanbanTaskDAO {
 	public void updateTaskStatus(KanbanTaskDTO dto) {
 		batis.update("KanbanTask.updateTaskStatus", dto);
 	}
+	
+	public void deleteAllTask(Long project_seq) {
+		batis.delete("KanbanTask.deleteAllTask", project_seq);
+	}
 }
