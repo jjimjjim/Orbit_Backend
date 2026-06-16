@@ -78,7 +78,7 @@
 			           count(*) as cnt
 			    from users
 			    where hire_date &gt;= add_months(trunc(sysdate, 'mm'), -5)
-			      and hire_date &lt;= sysdate
+			      and hire_date &lt; add_months(trunc(sysdate, 'mm'), 1)
 			    group by to_char(hire_date, 'yy/mm')
 			),
 			resign_data as (
@@ -86,7 +86,7 @@
 			           count(*) as cnt
 			    from users
 			    where resign_date &gt;= add_months(trunc(sysdate, 'mm'), -5)
-			      and resign_date &lt;= sysdate
+			      and resign_date &lt; add_months(trunc(sysdate, 'mm'), 1)
 			    group by to_char(resign_date, 'yy/mm')
 			)
 			select
