@@ -29,6 +29,10 @@ public class SupplyDAO {
 		mybatis.delete("Supply.deleteSupplyRentalsByIds", ids);
 	}
 	
+	public void deleteOrphanRequests() {
+		mybatis.delete("Supply.deleteOrphanRequests");
+	}
+	
 	public int deleteSupplies(List<Long> ids) {
 		return mybatis.delete("Supply.deleteSupplies",ids);
 	}
