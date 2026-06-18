@@ -23,7 +23,7 @@ jobs:
     - name: Make GCP_Key.json
       run: |
         mkdir -p src/main/resources
-        echo "${{ secrets.GCP_Key_json }}" > src/main/resources/GCP_Key.json
+        echo "${{ secrets.GCP_KEY_JSON }}" > src/main/resources/GCP_Key.json
 
     - name: Set up JDK 17
       uses: actions/setup-java@v4
