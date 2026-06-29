@@ -16,13 +16,16 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.storage.v2.GetObjectRequest;
 import com.study.app.domains.aiChat.AiChatService;
 
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 @Service
 public class MeetingMinutesService {
@@ -50,42 +53,42 @@ public class MeetingMinutesService {
 	@Value("${naver.object-storage.bucket}")
 	private String naverBucket;
 
-	@Value("${gemini.api-key}")
-	private String geminiApiKey;
+	@Value("${groq.api-key}")
+	private String groqApiKey;
 	
 	// Clova Speech STT
 	private String transcribe(MultipartFile audioFile) throws Exception {
-	    String apiUrl = speechInvokeUrl + "/recognizer/upload";
-	    String boundary = "----Boundary" + System.currentTimeMillis();
+		String originalFilename = audioFile.getOriginalFilename();
+		String ext = originalFilename.substring(originalFilename.lastIndexOf("."));
+		String audioKey = "audio_input_" + System.currentTimeMillis() + ext;
+		
+		S3Client s3 = getNaverS3Client();
 
-	    String paramsJson = "{\"language\":\"ko-KR\",\"completion\":\"async\",\"fullText\":true," +
-	    	    "\"diarization\":{\"enable\":false}," +
-	    	    "\"resultToObs\":true}";
-
-	    byte[] audioBytes = audioFile.getBytes();
-
-	    String metaPart = "--" + boundary + "\r\n"
-	        + "Content-Disposition: form-data; name=\"params\"\r\n"
-	        + "Content-Type: application/json\r\n\r\n"
-	        + paramsJson + "\r\n";
-
-	    String audioHeader = "--" + boundary + "\r\n"
-	        + "Content-Disposition: form-data; name=\"media\"; filename=\"audio\"\r\n"
-	        + "Content-Type: " + audioFile.getContentType() + "\r\n\r\n";
-
-	    String endBoundary = "\r\n--" + boundary + "--\r\n";
-
-	    byte[] body = concat(
-	        metaPart.getBytes(), audioHeader.getBytes(),
-	        audioBytes, endBoundary.getBytes()
-	    );
-
+		s3.putObject(
+			    PutObjectRequest.builder()
+			        .bucket(naverBucket)
+			        .key(audioKey)
+			        .contentType(audioFile.getContentType())
+			        .build(),
+			    RequestBody.fromBytes(audioFile.getBytes())
+			);	       
+	    
+	    // 3. Clova Speech에 URL로 요청 (/recognizer/url 엔드포인트)
+	    String paramsJson = "{"
+	        + "\"language\":\"ko-KR\","
+	        + "\"completion\":\"async\","
+	        + "\"fullText\":true,"
+	        + "\"diarization\":{\"enable\":false},"
+	        + "\"resultToObs\":true,"
+	        + "\"dataKey\":\"" + audioKey + "\""  // url → dataKey
+	        + "}";
+	    
 	    HttpRequest request = HttpRequest.newBuilder()
-	        .uri(URI.create(apiUrl))
-	        .header("X-CLOVASPEECH-API-KEY", speechSecretKey)
-	        .header("Content-Type", "multipart/form-data; boundary=" + boundary)
-	        .POST(HttpRequest.BodyPublishers.ofByteArray(body))
-	        .build();
+	            .uri(URI.create(speechInvokeUrl + "/recognizer/object-storage"))  // /upload → /url
+	            .header("X-CLOVASPEECH-API-KEY", speechSecretKey)
+	            .header("Content-Type", "application/json")
+	            .POST(HttpRequest.BodyPublishers.ofString(paramsJson))
+	            .build();
 
 	    HttpResponse<String> response = HttpClient.newHttpClient()
 	        .send(request, HttpResponse.BodyHandlers.ofString());
@@ -97,7 +100,11 @@ public class MeetingMinutesService {
 	    JsonNode root = mapper.readTree(response.body());
 	    String token = root.get("token").asText();
 	    
-	    return pollResult(token); 
+	    // 4. 폴링 후 OBS 음성파일 삭제
+	    String result = pollResult(token, audioKey);
+	    s3.deleteObject(r -> r.bucket(naverBucket).key(audioKey));
+	    
+	    return result;
 	}
 	
 	private S3Client getNaverS3Client() {
@@ -109,8 +116,8 @@ public class MeetingMinutesService {
 	        .build();
 	}
 
-	private String readResultFromObs(String token) throws Exception {
-	    String objectKey = token + ".json";
+	private String readResultFromObs(String token, String audioKey) throws Exception {
+	    String objectKey = naverBucket + ":" + audioKey + "_" + token + ".json";
 	    
 	    S3Client s3 = getNaverS3Client();
 	    GetObjectRequest getRequest = GetObjectRequest.builder()
@@ -127,7 +134,7 @@ public class MeetingMinutesService {
 	    return root.get("text").asText();
 	}
 	
-	private String pollResult(String token) throws Exception {
+	private String pollResult(String token, String audioKey) throws Exception {
 	    String statusUrl = speechInvokeUrl + "/recognizer/" + token;
 
 	    for (int i = 0; i < 30; i++) {  // 최대 30번 (약 5분)
@@ -146,11 +153,11 @@ public class MeetingMinutesService {
 
 	        ObjectMapper mapper = new ObjectMapper();
 	        JsonNode root = mapper.readTree(response.body());
-	        String status = root.get("status").asText();
+	        String result = root.get("result").asText();
 
-	        if ("COMPLETED".equals(status)) {
-	            return readResultFromObs(token);
-	        } else if ("ERROR".equals(status)) {
+	        if ("COMPLETED".equals(result)) {
+	            return readResultFromObs(token, audioKey);
+	        } else if ("ERROR".equals(result)) {
 	            throw new Exception("STT 처리 실패: " + root.get("message").asText());
 	        }
 	        // RUNNING이면 계속 대기
@@ -170,15 +177,69 @@ public class MeetingMinutesService {
 	    return result;
 	}
 	
+	private String[] extractSummary(String transcript) throws Exception {
+	    String prompt = "다음 회의 내용을 분석해서 아래 JSON 형식으로만 반환해줘. 다른 말은 하지 마.decisions와 todos 모두 반드시 문자열로 반환해.\n"
+	        + "{\"decisions\": \"결정된 사항\", \"todos\": \"할 일 목록\"}\n\n"
+	        + "회의 내용: " + transcript;
+
+	    String requestBody = "{"
+	        + "\"model\": \"llama-3.1-8b-instant\","
+	        + "\"messages\": [{\"role\": \"user\", \"content\": \"" 
+	        + prompt.replace("\"", "\\\"").replace("\n", "\\n") 
+	        + "\"}]"
+	        + "}";
+
+	    HttpRequest request = HttpRequest.newBuilder()
+	        .uri(URI.create("https://api.groq.com/openai/v1/chat/completions"))
+	        .header("Authorization", "Bearer " + groqApiKey)
+	        .header("Content-Type", "application/json")
+	        .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+	        .build();
+
+	    HttpResponse<String> response = HttpClient.newHttpClient()
+	        .send(request, HttpResponse.BodyHandlers.ofString());
+
+	    System.out.println("Groq 응답: " + response.body());
+
+	    ObjectMapper mapper = new ObjectMapper();
+	    JsonNode root = mapper.readTree(response.body());
+
+	    if (root.has("error")) {
+	        return new String[]{"", ""};
+	    }
+
+	    String text = root.path("choices").get(0)
+	        .path("message").path("content").asText();
+
+	    text = text.replace("```json", "").replace("```", "").trim();
+	    JsonNode result = mapper.readTree(text);
+
+	    String decisions = result.get("decisions").asText();
+
+	    JsonNode todosNode = result.get("todos");
+	    String todos;
+	    if (todosNode.isArray()) {
+	        StringBuilder sb = new StringBuilder();
+	        for (JsonNode item : todosNode) {
+	            sb.append(item.asText()).append("\n");
+	        }
+	        todos = sb.toString().trim();
+	    } else {
+	        todos = todosNode.asText();
+	    }
+
+	    return new String[]{decisions, todos};
+	}
+	
 	// STT + AI 요약
 	public Map<String, String> sttAndSummary(MultipartFile audioFile) throws Exception {
 	    String transcript = transcribe(audioFile);
-//	    String[] summary = extractSummary(transcript);
+	    String[] summary = extractSummary(transcript);
 	    
 	    Map<String, String> result = new HashMap<>();
 	    result.put("transcript", transcript);
-//	    result.put("decisions", summary[0]);
-//	    result.put("todos", summary[1]);
+	    result.put("decisions", summary[0]);
+	    result.put("todos", summary[1]);
 	    return result;
 	}
 	
