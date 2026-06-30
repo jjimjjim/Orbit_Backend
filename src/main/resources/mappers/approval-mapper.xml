@@ -561,4 +561,29 @@
 	<select id="getNotiDocType" resultType="String">
 		select doc_type from draft_documents where doc_seq = #{doc_seq}
 	</select>
+	
+	<select id="getTopReferrers" resultType="com.study.app.domains.users.UsersDTO">
+		select users_seq, id, name, dept_name, rank_name
+	    	from (
+		        select 
+		            u.users_seq as users_seq,
+		            u.id as id,
+		            u.name as name,
+		            d.dept_name as dept_name,
+		            r.rank_name as rank_name,
+		            COUNT(cc.doc_seq) as select_count
+		        from approval_cc cc
+		        JOIN draft_documents doc ON cc.doc_seq = doc.doc_seq
+		        JOIN users u ON cc.users_id = u.id
+		        LEFT JOIN departments d ON u.dept_seq = d.dept_seq
+		        LEFT JOIN rank r ON u.rank_seq = r.rank_seq
+		        where doc.users_id = #{users_id}
+		          and cc.users_id != #{users_id}
+		        group by u.users_seq, u.id, u.name, d.dept_name, r.rank_name
+		        order by select_count desc
+	    	)
+	    <![CDATA[
+	    WHERE ROWNUM <= 3
+	    ]]>
+	</select>
 </mapper>

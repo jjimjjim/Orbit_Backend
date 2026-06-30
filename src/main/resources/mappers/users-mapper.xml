@@ -143,7 +143,7 @@
         d.dept_name AS dept_name,
         d.parent_dept_seq AS parent_dept_seq,
         d.auth_group AS auth_group,
-        r.rank_name AS rank_name
+        r.rank_name AS rank_name, r.rank_seq AS rank_seq
     FROM users u
     LEFT JOIN departments d ON u.dept_seq = d.dept_seq
     LEFT JOIN rank r ON u.rank_seq = r.rank_seq
