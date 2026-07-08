@@ -25,6 +25,10 @@ public class SchedulesDAO {
 	    return mybatis.selectList("Schedules.getSchedules", usersId);
 	}
 	
+	public SchedulesDTO getScheduleById(Long schedule_seq) {
+	    return mybatis.selectOne("Schedules.getScheduleById", schedule_seq);
+	}
+	
 	public int deleteSchedules(Long schedule_seq) {
 		return mybatis.delete("Schedules.deleteSchedules",schedule_seq);
 	}

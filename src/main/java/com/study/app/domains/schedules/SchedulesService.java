@@ -25,8 +25,9 @@ public class SchedulesService {
 		Set<String> companyCategories = Set.of("COMPANY", "TEAM", "ANNIVERSARY", "holiday");
 		if (companyCategories.contains(dto.getSchedule_type())) {
 	        UsersDTO user = usersDAO.getUsersInfo(usersId); // 기존 유저 조회용 DAO/Mapper 활용
-	        if (user == null || !"ROLE_HR_ADMIN".equals(user.getAuth_group())) {
-	        	throw new IllegalStateException("회사 공용 일정은 HR 관리자만 등록할 수 있습니다.");
+	        String authGroup = (user != null) ? user.getAuth_group() : null;
+	        if (!"ROLE_HR_ADMIN".equals(authGroup) && !"ROLE_SUPER_ADMIN".equals(authGroup)) {
+	        	throw new IllegalStateException("회사 공용 일정은 관리자만 등록할 수 있습니다.");
 	        }
 	    }
 		return schedDAO.insertSchedules(dto);
@@ -36,12 +37,39 @@ public class SchedulesService {
 	    return schedDAO.getSchedules(usersId);
 	}
 	
-	public int deleteSchedules(Long schedule_seq) {
-		return schedDAO.deleteSchedules(schedule_seq);
+	public int deleteSchedules(Long schedule_seq, String usersId) {
+	    Set<String> companyCategories = Set.of("COMPANY", "TEAM", "ANNIVERSARY", "holiday");
+	    SchedulesDTO target = schedDAO.getScheduleById(schedule_seq);
+
+	    if (target == null) {
+	        throw new IllegalStateException("존재하지 않는 일정입니다.");
+	    }
+
+	    if (companyCategories.contains(target.getSchedule_type())) {
+	        UsersDTO user = usersDAO.getUsersInfo(usersId);
+	        String authGroup = (user != null) ? user.getAuth_group() : null;
+	        if (!"ROLE_HR_ADMIN".equals(authGroup) && !"ROLE_SUPER_ADMIN".equals(authGroup)) {
+	            throw new IllegalStateException("회사 공용 일정은 관리자만 삭제할 수 있습니다.");
+	        }
+	    } else {
+	        if (!usersId.equals(target.getUsers_id())) {
+	            throw new IllegalStateException("본인의 일정만 삭제할 수 있습니다.");
+	        }
+	    }
+
+	    return schedDAO.deleteSchedules(schedule_seq);
 	}
 	
-	public int updateSchedules(SchedulesDTO dto) {
-		return schedDAO.updateSchedules(dto);
+	public int updateSchedules(SchedulesDTO dto, String usersId) {
+	    Set<String> companyCategories = Set.of("COMPANY", "TEAM", "ANNIVERSARY", "holiday");
+	    if (companyCategories.contains(dto.getSchedule_type())) {
+	        UsersDTO user = usersDAO.getUsersInfo(usersId);
+	        String authGroup = (user != null) ? user.getAuth_group() : null;
+	        if (!"ROLE_HR_ADMIN".equals(authGroup) && !"ROLE_SUPER_ADMIN".equals(authGroup)) {
+	            throw new IllegalStateException("회사 공용 일정은 HR 관리자만 수정할 수 있습니다.");
+	        }
+	    }
+	    return schedDAO.updateSchedules(dto);
 	}
 	
 	public List<SchedulesDTO> getApprovedVacations(String usersId) {

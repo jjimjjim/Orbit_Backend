@@ -48,15 +48,19 @@ public class SchedulesController {
 	}
 	
 	@DeleteMapping("/{schedule_seq}")
-	public ResponseEntity<Void> deleteSchedules(@PathVariable Long schedule_seq){
-		schedServ.deleteSchedules(schedule_seq);
-		return ResponseEntity.ok().build();
+	public ResponseEntity<Void> deleteSchedules(@PathVariable Long schedule_seq,
+	                                             @RequestHeader("Authorization") String token){
+	    String usersId = jwtUtil.getSubject(token.replace("Bearer ", ""));
+	    schedServ.deleteSchedules(schedule_seq, usersId);
+	    return ResponseEntity.ok().build();
 	}
 	
 	@PutMapping("/{schedule_seq}")
-	public ResponseEntity<Void> updateSchedules(@PathVariable Long schedule_seq, @RequestBody SchedulesDTO dto){
+	public ResponseEntity<Void> updateSchedules(@PathVariable Long schedule_seq, @RequestBody SchedulesDTO dto,
+												@RequestHeader("Authorization") String token){
+		String usersId = jwtUtil.getSubject(token.replace("Bearer ", ""));
 		dto.setSchedule_seq(schedule_seq);
-		schedServ.updateSchedules(dto);
+		schedServ.updateSchedules(dto, usersId);
 		return ResponseEntity.ok().build();
 	}
 	

@@ -30,6 +30,9 @@
 		OR is_public = 1
 		ORDER BY start_dt
 	</select>
+	<select id="getScheduleById" resultType="com.study.app.domains.schedules.SchedulesDTO">
+	    SELECT * FROM SCHEDULES WHERE SCHEDULE_SEQ = #{schedule_seq}
+	</select>
 	<delete id="deleteSchedules">
 		delete from schedules where Schedule_seq=#{schedule_seq}
 	</delete>
