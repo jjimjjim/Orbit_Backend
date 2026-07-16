@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.study.app.domains.aiChat.AiChatService;
-import com.study.app.domains.aiChat.RagDAO;
 import com.study.app.domains.file.FileService;
 
 @Service
@@ -54,10 +53,12 @@ public class DocumentsService {
             dao.insertDocFile(docFileDTO);
             
             Long file_seq = docFileDTO.getFile_seq();
-            String signedUrl = fileServ.createSignedUrl(sysname);
             
-            aiChatServ.createChunk(file_seq, document_seq, oriname, signedUrl, mime_type);
-
+            if(isAiFile(oriname)) {	
+                String signedUrl = fileServ.createSignedUrl(sysname);
+                aiChatServ.createChunk(file_seq, document_seq, oriname, signedUrl, mime_type);
+            }
+            
         } catch (Exception e) {
             throw new RuntimeException("문서 및 파일 등록 실패: " + e.getMessage(), e);
         }
@@ -120,4 +121,23 @@ public class DocumentsService {
     public void removeFavorite(Long document_seq, String loginId) {
     	dao.removeFavorite(document_seq, loginId);
     }
+    
+    private boolean isAiFile(String oriName) {
+    	if(oriName == null || oriName.isBlank()) {
+    		return false;
+    	}
+    	
+    	String lowerFileName = oriName.toLowerCase();
+    	
+    	boolean aiExtension = 
+    			lowerFileName.endsWith(".pdf")
+    		 || lowerFileName.endsWith(".doc")
+    		 || lowerFileName.endsWith(".docx");
+    	
+    	if(!aiExtension) {
+    		return false;
+    	}
+    	return true;
+    }
+    
 }
