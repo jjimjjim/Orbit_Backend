@@ -351,6 +351,10 @@ public class AdminService {
 			fileServ.deleteFromGCS(newSysname);
 		}
 	}
+	
+	public void insertRank(RankDTO dto) {
+		rankDao.insertRank(dto);
+	}
 
 
 
