@@ -44,4 +44,8 @@
 		when matched then
 			update set target.rank_order = source.new_order
 	</update>
+	
+	<update id="updateRankOrder">
+		update rank set rank_order = #{rank_order} where rank_seq = #{rank_seq}
+	</update>
 </mapper>

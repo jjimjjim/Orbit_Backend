@@ -377,6 +377,21 @@ public class AdminService {
 		}
 		rankDao.reorderRanks();
 	}
+	
+	@Transactional
+	public void updateRankOrder(List<RankDTO> list) {
+		if(list == null || list.isEmpty()) {
+			throw new IllegalStateException("변경할 직급 순서가 없습니다.");
+		}
+		
+		for(RankDTO rank : list) {
+			int result = rankDao.updateRankOrder(rank);
+			
+			if(result == 0) {
+				throw new IllegalStateException("직급 순서를 변경하지 못했습니다.");
+			}
+		}
+	}
 
 
 

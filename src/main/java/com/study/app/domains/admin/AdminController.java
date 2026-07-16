@@ -480,6 +480,12 @@ public class AdminController {
 		}
 	}
 	
+	@PutMapping("/hr/updateRankOrder")
+	public ResponseEntity<Void> updateRankOrder(@RequestBody List<RankDTO> list) {
+		adminServ.updateRankOrder(list);
+		return ResponseEntity.ok().build();
+	}
+	
 	
 	
 	

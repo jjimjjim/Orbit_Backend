@@ -35,4 +35,8 @@ public class RankDAO {
 	public void reorderRanks() {
 		mybatis.update("Rank.reorderRanks");
 	}
+	
+	public int updateRankOrder(RankDTO dto) {
+		return mybatis.update("Rank.updateRankOrder",dto);
+	}
 }
