@@ -7,16 +7,19 @@ public class AnnualLeaveUpdateDTO {
 	private Long leave_seq;
 	private double total_days;
 	private double used_days;
+	private double admin_days;
 	
 	public AnnualLeaveUpdateDTO() {}
 	
-	public AnnualLeaveUpdateDTO(String users_id, String hire_date, Long leave_seq,double total_days, double used_days) {
+	public AnnualLeaveUpdateDTO(String users_id, String hire_date, Long leave_seq,
+			double total_days, double used_days, double admin_days) {
 		super();
 		this.users_id = users_id;
 		this.hire_date = hire_date;
 		this.leave_seq = leave_seq;
 		this.total_days = total_days;
 		this.used_days = used_days;
+		this.admin_days = admin_days;
 	}
 	
 	public String getUsers_id() {
@@ -48,5 +51,11 @@ public class AnnualLeaveUpdateDTO {
 	}
 	public void setUsed_days(double used_days) {
 		this.used_days = used_days;
+	}
+	public double getAdmin_days() {
+		return admin_days;
+	}
+	public void setAdmin_days(double admin_days) {
+		this.admin_days = admin_days;
 	}
 }

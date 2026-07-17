@@ -29,8 +29,11 @@ public class AnnualLeaveService {
 	        }
 
 			LocalDate hireDate = LocalDate.parse(dto.getHire_date());
-			double totalDays = calculateAnnualLeaveDays(hireDate, today);
+			double baseDays = calculateAnnualLeaveDays(hireDate, today);
+			double adminDays = dto.getAdmin_days();
 			double usedDays = dto.getUsed_days();
+
+			double totalDays = Math.max(baseDays + adminDays, 0);
 			double remainingDays = Math.max(totalDays - usedDays, 0);
 
 			dao.updateAnnualLeave(dto.getLeave_seq(),totalDays,remainingDays);

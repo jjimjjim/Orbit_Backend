@@ -3,7 +3,7 @@
 <mapper namespace="AnnualLeave">
 	
 	<insert id="insertAnnualLeave">
-		insert into annual_leave values (leave_seq.nextval, #{users_id}, TO_NUMBER(TO_CHAR(SYSDATE, 'YYYY')), 0, 0, 0)
+		insert into annual_leave values (leave_seq.nextval, #{users_id}, TO_NUMBER(TO_CHAR(SYSDATE, 'YYYY')), 0, 0, 0, 0)
 	</insert>
 	
 	<select id="selectAnnualLeaveData" resultType="map">
@@ -26,7 +26,7 @@
 	
 	<select id="findAnnualLeaveTargetUsers" resultType="com.study.app.domains.annualLeave.AnnualLeaveUpdateDTO">
 		select u.id as users_id, to_char(u.hire_date, 'YYYY-MM-DD') as hire_date,
-			a.leave_seq, a.total_days, a.used_days
+			a.leave_seq, a.total_days, a.used_days, a.admin_days
 		from users u
 		join annual_leave a on u.id = a.users_id
 		where a.year = extract(year from sysdate)
@@ -36,9 +36,9 @@
 	
 	<insert id="insertMissingAnnualLeave">
 		insert into annual_leave (
-			leave_seq, users_id, year, total_days, used_days, remaining_days
+			leave_seq, users_id, year, total_days, used_days, remaining_days, admin_days
 		)
-		select leave_seq.nextval, u.id, extract(year from sysdate), 0, 0, 0
+		select leave_seq.nextval, u.id, extract(year from sysdate), 0, 0, 0, 0
 		from users u where u.hire_date is not null 
 			and u.status = 'ACTIVE'
 			and not exists (
