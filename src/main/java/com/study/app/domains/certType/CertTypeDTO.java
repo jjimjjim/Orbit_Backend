@@ -12,7 +12,6 @@ public class CertTypeDTO {
 	private Long print_days;
 	private Long max_print_count;
 	private LocalDateTime updated_at;
-	private String cert_description;
 	
 	private Long cert_request_seq;
 	private String request_reason;
@@ -32,8 +31,7 @@ public class CertTypeDTO {
 	public CertTypeDTO() {}
 	
 	public CertTypeDTO(Long cert_type_seq, String cert_type_name, String hidden_yn, LocalDateTime created_at,
-			String cert_type_code, String manage_auth_group, Long print_days, Long max_print_count, LocalDateTime updated_at
-			, String cert_description) {
+			String cert_type_code, String manage_auth_group, Long print_days, Long max_print_count, LocalDateTime updated_at) {
 		super();
 		this.cert_type_seq = cert_type_seq;
 		this.cert_type_name = cert_type_name;
@@ -44,7 +42,6 @@ public class CertTypeDTO {
 		this.print_days = print_days;
 		this.max_print_count = max_print_count;
 		this.updated_at = updated_at;
-		this.cert_description = cert_description;
 	}
 	
 	public Long getCert_type_seq() {
@@ -100,12 +97,6 @@ public class CertTypeDTO {
 	}
 	public void setUpdated_at(LocalDateTime updated_at) {
 		this.updated_at = updated_at;
-	}
-	public String getCert_description() {
-		return cert_description;
-	}
-	public void setCert_description(String cert_description) {
-		this.cert_description = cert_description;
 	}
 	public Long getCert_request_seq() {
 		return cert_request_seq;
