@@ -235,6 +235,16 @@ public class ApprovalService {
 	        dao.updateResubmitDocSeq(originalDocSeq, dto.getDoc_seq());
 	    }
 	}
+	
+	@Transactional
+	public void insertCancelVacation(Long originalDocSeq, CancelVacationDTO dto) {
+		insertCommonApprovalData(dto);
+		dao.insertCancelVacation(dto);
+		
+		if (originalDocSeq != null) {
+	        dao.updateResubmitDocSeq(originalDocSeq, dto.getDoc_seq());
+	    }
+	}
 
 	public Map<String, Object> getApprovalDetail(String doc_type, Long doc_seq) throws Exception {
 		Map<String, Object> result = new HashMap<>();
@@ -302,7 +312,11 @@ public class ApprovalService {
 				result.put("attachments", attachments);
 			}
 			break;
-
+		
+		case "CANCEL_VACATION":
+			detail = dao.selectCancelVacationDetail(doc_seq);
+			break;
+			
 		default:
 			throw new IllegalArgumentException("잘못된 문서 타입입니다: " + doc_type);
 		}
@@ -369,7 +383,24 @@ public class ApprovalService {
 				Double newRemaining = currentRemaining - used_days;
 				annualDao.updateAnnualLeaveUsedDays(users_id, newUsed, newRemaining);
 			}
+			
+			if(doc_type.equals("CANCEL_VACATION")) {
+				Long vac_seq = dao.selectCancelVacSeq(doc_seq);
+				
+				Map<String, Object> vac_info = dao.selectVacInfoByVacSeq(vac_seq);
+			    String users_id = String.valueOf(vac_info.get("users_id"));
+			    Double cancel_days = Double.parseDouble(String.valueOf(vac_info.get("days")));
 
+			    Map<String, Object> leaveData = annualDao.selectAnnualLeaveData(users_id);
+			    Double currentUsed = Double.parseDouble(String.valueOf(leaveData.get("used_days")));
+			    Double currentRemaining = Double.parseDouble(String.valueOf(leaveData.get("remaining_days")));
+			    
+			    Double newUsed = currentUsed - cancel_days;
+			    Double newRemaining = currentRemaining + cancel_days;
+			    annualDao.updateAnnualLeaveUsedDays(users_id, newUsed, newRemaining);
+			    
+			    dao.updateVacCancelYn(vac_seq);
+			}
 		}
 	}
 
@@ -670,7 +701,14 @@ public class ApprovalService {
 			}
 		}
 	}
-
+	
+	@Transactional
+	public void updateCancelVacation(Long doc_seq, CancelVacationDTO dto) {
+		dto.setDoc_seq(doc_seq);
+		updateCommonApprovalData(dto);
+		dao.updateCancelVacation(dto);
+	}
+	
 	public Map<String, Object> getApprovalHomeData(String users_id) {
 		Map<String, Object> result = new HashMap<>();
 
@@ -822,6 +860,10 @@ public class ApprovalService {
 		case "PURCHASE" :
 			deletePurchaseDoc(doc_seq);
 			break;	
+			
+		case "CANCEL_VACATION" :
+			deleteCancelVacDoc(doc_seq);
+			break;
 
 		default:
 			throw new IllegalArgumentException("잘못된 문서 타입입니다: " + doc_type);
@@ -896,6 +938,12 @@ public class ApprovalService {
 		dao.deletePurAttach(doc_seq);
 		dao.deletePurItem(doc_seq);
 		dao.deletePurDoc(doc_seq);
+		deleteCommon(doc_seq);
+	}
+	
+	// 휴가취소신청서
+	private void deleteCancelVacDoc(Long doc_seq) {
+		dao.deleteCancelVacDoc(doc_seq);
 		deleteCommon(doc_seq);
 	}
 
@@ -975,5 +1023,9 @@ public class ApprovalService {
 			}
 		}
 		return approvers;
+	}
+	
+	public List<VacationDTO> getApprovedVacationList(String loginId) {
+		return dao.getApprovedVacationList(loginId);
 	}
 }

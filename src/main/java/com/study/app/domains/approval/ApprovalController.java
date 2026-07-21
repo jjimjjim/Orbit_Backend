@@ -72,6 +72,14 @@ public class ApprovalController {
 		return ResponseEntity.ok().build();
 	}
 	
+	@PostMapping("submit/cancelVacation")
+	public ResponseEntity<Void> submitCancelVacation(@RequestParam(required = false) Long originalDocSeq,
+													@RequestBody CancelVacationDTO dto) {
+		
+		appServ.insertCancelVacation(originalDocSeq, dto);
+		return ResponseEntity.ok().build();
+	}
+	
 	@GetMapping("detail/{doc_type}/{doc_seq}")
     public ResponseEntity<?> getDetail(@PathVariable String doc_type,
             							@PathVariable Long doc_seq) {
@@ -136,6 +144,14 @@ public class ApprovalController {
 												@RequestPart(value = "files", required = false) List<MultipartFile> files){
 		
 		appServ.updatePurchase(doc_seq, dto, files);
+		return ResponseEntity.ok().build();
+	}
+	
+	@PutMapping("update/cancelVacation/{doc_seq}")
+	public ResponseEntity<Void> updateCancelVacation(@PathVariable Long doc_seq,
+													@RequestBody CancelVacationDTO dto) {
+		
+		appServ.updateCancelVacation(doc_seq, dto);
 		return ResponseEntity.ok().build();
 	}
 	
@@ -223,5 +239,10 @@ public class ApprovalController {
 		
 		List<UsersDTO> approvers = appServ.getDefaultApprovers(doc_type, loginId);
 		return ResponseEntity.ok(approvers);
+	}
+	
+	@GetMapping("getApprovedVacationList")
+	public ResponseEntity<List<VacationDTO>> getApprovedVacationList(@RequestAttribute String loginId) {
+		return ResponseEntity.ok(appServ.getApprovedVacationList(loginId));
 	}
 }
