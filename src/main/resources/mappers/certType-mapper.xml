@@ -12,7 +12,6 @@
 	        ct.print_days,
 	        ct.max_print_count,
 	        ct.updated_at,
-	        ct.cert_description,
 	
 	        req.cert_request_seq,
 	        req.request_reason,
