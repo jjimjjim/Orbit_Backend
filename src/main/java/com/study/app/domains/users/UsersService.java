@@ -127,10 +127,20 @@ public class UsersService {
 	
 	//직원관리 - 직원등록용 비번 암호화 등
     @Transactional
-    public void registerUserByAdmin(UsersDTO dto) {
+    public void registerUserByAdmin(UsersDTO dto, MultipartFile profile) {
         String originPw = dto.getPw();
         if (originPw != null && !originPw.isEmpty()) {
             dto.setPw(EncryptionUtils.getSha512(originPw));
+        }
+        
+        if (profile != null && !profile.isEmpty()) {
+            try {
+                Map<String, String> fileInfo = fileServ.upload(profile);
+                dto.setOriname(fileInfo.get("oriname"));
+                dto.setSysname(fileInfo.get("sysname"));
+            } catch (Exception e) {
+                throw new RuntimeException("파일 업로드 실패", e);
+            }
         }
         
         dao.insertUserByAdmin(dto); //USERS 테이블 등록

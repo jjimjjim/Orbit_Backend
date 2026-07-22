@@ -830,14 +830,15 @@ public class AdminController {
 
 	@PostMapping("/hr/registerUser")
     public ResponseEntity<Void> registerUserByAdmin(
-            @RequestBody UsersDTO dto,
+            @RequestPart("input") UsersDTO dto,
+            @RequestPart(value = "file", required = false) MultipartFile profile,
             @RequestAttribute String loginId) {
 
         if (!adminServ.isHrAuthorized(loginId)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        adminServ.registerUserByAdmin(dto);
+        adminServ.registerUserByAdmin(dto,profile);
         return ResponseEntity.ok().build();
     }
 }

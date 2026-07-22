@@ -775,7 +775,7 @@ public class AdminService {
     }
 	
 	//직원 관리 - 직원 등록  
-	public void registerUserByAdmin(UsersDTO dto) {
-        usersServ.registerUserByAdmin(dto); 
+	public void registerUserByAdmin(UsersDTO dto, MultipartFile profile) {
+        usersServ.registerUserByAdmin(dto,profile); 
 	}
 }

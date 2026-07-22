@@ -309,10 +309,10 @@
 	        created_at, sysname, is_hr_manager
 	    ) values (
 	        #{id}, #{pw}, users_seq.nextval, #{name}, '-', #{email},
-	        'Default6.png', '-', '-', '-',
+	        #{oriname}, '-', '-', '-',
 	        '-', '-', '-',
 	        'USER', 'ACTIVE', TO_TIMESTAMP(#{hire_date}, 'YYYY-MM-DD HH24:MI:SS'), #{dept_seq}, #{rank_seq},
-	        sysdate, 'Default6.png', 'N'
+	        sysdate, #{sysname}, 'N'
 	    )
 	</insert>
 </mapper>
