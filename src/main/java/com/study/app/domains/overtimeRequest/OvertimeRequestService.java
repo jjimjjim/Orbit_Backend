@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.study.app.domains.attendance.AttendanceService;
+import com.study.app.domains.notifications.NotificationsService;
 
 @Service
 public class OvertimeRequestService {
@@ -20,6 +21,8 @@ public class OvertimeRequestService {
 	private OvertimeRequestDAO dao;
 	@Autowired
 	private AttendanceService attServ;
+	@Autowired
+	private NotificationsService notiServ;
 	
 	public Map<String, Object> getAllOvertimeRQ(Long cPage, String status) {
 		int recordCountPerPage = 10;
@@ -71,5 +74,13 @@ public class OvertimeRequestService {
 	    dto.setRequest_min(requestMin);
 	    
 	    dao.insertOvertimeReq(dto);
+	    
+	    notiServ.sendToAuthGroup(
+	    		"ROLE_HR_ADMIN", 
+	    		loginId, 
+	    		dto.getOvertime_seq(), 
+	    		"OVERTIME", 
+	    		"연장 근무 신청이 도착했습니다.", 
+	    		"OVERTIME");
 	}
 }

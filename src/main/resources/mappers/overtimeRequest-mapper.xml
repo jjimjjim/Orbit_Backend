@@ -58,11 +58,16 @@
 	</update>
 	
 	<insert id="insertOvertimeReq">
+		<selectKey keyProperty="overtime_seq"
+			       resultType="long"
+			       order="BEFORE">
+        	select overtime_seq.nextval from dual
+        </selectKey>
 	    INSERT INTO OVERTIME_REQUEST (
 	        OVERTIME_SEQ, ATTENDANCE_SEQ, USERS_ID, WORK_DATE,
 	        START_DT, END_DT, REQUEST_MIN, REASON, STATUS
 	    ) VALUES (
-	        OVERTIME_SEQ.NEXTVAL,
+	        #{overtime_seq},
 	        #{attendance_seq},
 	        #{users_id},
 	        TO_DATE(#{work_date}, 'YYYY-MM-DD'),
