@@ -94,4 +94,12 @@ public class NotificationsDAO {
 		batis.delete("Notifications.deleteSupplyNotiBySeq", ref_seq);
 	}
 	
+	public List<NotificationsDTO> findCertRequestNotiBySeq(Long ref_seq) {
+		return batis.selectList("Notifications.findCertRequestNotiBySeq", ref_seq);
+	}
+	
+	public void deleteCertRequestNotiBySeq(Long ref_seq) {
+		batis.delete("Notifications.deleteCertRequestNotiBySeq", ref_seq);
+	}
+	
 }

@@ -97,4 +97,12 @@
 	<delete id="deleteSupplyNotiBySeq">
 		delete from notifications where ref_type = 'SUPPLY' and ref_seq = #{ref_seq} 
 	</delete>
+	
+	<select id="findCertRequestNotiBySeq" resultType="com.study.app.domains.notifications.NotificationsDTO">
+		select * from notifications where ref_type = 'CERTISSUE' and ref_seq = #{ref_seq}
+	</select>
+	
+	<delete id="deleteCertRequestNotiBySeq">
+		delete from notifications where ref_type = 'CERTISSUE' and ref_seq = #{ref_seq}  
+	</delete>
 </mapper>
