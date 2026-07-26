@@ -140,6 +140,10 @@ public class UsersDAO {
 		return batis.selectOne("Users.findApproverBySpecificDept", searchParams);
 	}
 	
+	public UsersDTO findApproverByTargetId(Map<String, Object> searchParams) {
+		return batis.selectOne("Users.findApproverByTargetId", searchParams);
+	}
+	
 	public String findProfileSysname(String users_id) {
 		return batis.selectOne("Users.findProfileSysname", users_id);
 	}

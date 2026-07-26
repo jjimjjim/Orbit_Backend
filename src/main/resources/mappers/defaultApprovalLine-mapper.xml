@@ -6,10 +6,12 @@
 		select 
 			dal.*, 
 			r.rank_name, 
-			d.dept_name
+			d.dept_name,
+			u.name
 		from default_approval_line dal
 		left join rank r on dal.approver_rank_seq = r.rank_seq
 		left join departments d on dal.target_dept_seq = d.dept_seq
+		left join users u on dal.target_users_id = u.id
 		where dal.doc_type = #{doc_type}
         order by dal.drafter_rank_seq, dal.step_order
 	</select>
@@ -21,7 +23,7 @@
 	<insert id="insertApprovalLine">
 		insert into default_approval_line values 
 			(d_line_seq.nextval, #{doc_type}, #{drafter_rank_seq}, #{step_order}, #{approver_scope}, 
-			#{approver_rank_seq}, #{target_dept_seq, jdbcType=NUMERIC}, sysdate, sysdate)
+			#{approver_rank_seq}, #{target_dept_seq, jdbcType=NUMERIC}, sysdate, sysdate, #{target_users_id, jdbcType=VARCHAR})
 	</insert>
 	
 	<select id="getDefaultApprovalLine" resultType="com.study.app.domains.defaultApprovalLine.DefaultApprovalLineDTO">

@@ -176,7 +176,7 @@
     LEFT JOIN departments d ON u.dept_seq = d.dept_seq
     LEFT JOIN rank r ON u.rank_seq = r.rank_seq
     WHERE u.status = 'ACTIVE'
-    ORDER BY r.rank_order
+    ORDER BY r.rank_order, u.name
 	</select>
 	
 	<select id="getMyPageInfo" resultType="com.study.app.domains.users.UsersDTO">
@@ -298,6 +298,17 @@
 	        and u.users_seq != #{drafter_seq}
 	    )
 	    where rownum = 1
+	</select>
+	
+	<select id="findApproverByTargetId" resultType="com.study.app.domains.users.UsersDTO">
+		select *
+		from (
+			select u.*
+			from users u
+			where u.id = #{target_users_id}
+			and u.users_seq != #{drafter_seq}
+		)
+		where rownum = 1
 	</select>
 	
 	<select id="findProfileSysname" resultType="String">

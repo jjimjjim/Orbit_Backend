@@ -12,14 +12,16 @@ public class DefaultApprovalLineDTO {
 	private Long target_dept_seq;
 	private LocalDateTime created_at;
 	private LocalDateTime updated_at;
+	private String target_users_id;
 	
 	private String rank_name;
 	private String dept_name;
+	private String name;
 	
 	public DefaultApprovalLineDTO() {}
 	public DefaultApprovalLineDTO(Long line_seq, String doc_type, Long drafter_rank_seq, Long step_order,
 			String approver_scope, Long approver_rank_seq, Long target_dept_seq, LocalDateTime created_at,
-			LocalDateTime updated_at, String rank_name, String dept_name) {
+			LocalDateTime updated_at, String rank_name, String dept_name, String name, String target_users_id) {
 		super();
 		this.line_seq = line_seq;
 		this.doc_type = doc_type;
@@ -30,8 +32,10 @@ public class DefaultApprovalLineDTO {
 		this.target_dept_seq = target_dept_seq;
 		this.created_at = created_at;
 		this.updated_at = updated_at;
+		this.target_users_id = target_users_id;
 		this.rank_name = rank_name;
 		this.dept_name = dept_name;
+		this.name = name;
 	}
 	public Long getLine_seq() {
 		return line_seq;
@@ -87,6 +91,12 @@ public class DefaultApprovalLineDTO {
 	public void setUpdated_at(LocalDateTime updated_at) {
 		this.updated_at = updated_at;
 	}
+	public String getTarget_users_id() {
+		return target_users_id;
+	}
+	public void setTarget_users_id(String target_users_id) {
+		this.target_users_id = target_users_id;
+	}
 	public String getRank_name() {
 		return rank_name;
 	}
@@ -98,5 +108,11 @@ public class DefaultApprovalLineDTO {
 	}
 	public void setDept_name(String dept_name) {
 		this.dept_name = dept_name;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
 	}
 }
