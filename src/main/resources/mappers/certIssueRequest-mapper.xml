@@ -3,12 +3,17 @@
 <mapper namespace="CertIssueRequest">
 	
 	<insert id="insertCertRequest">
-		insert into cert_issue_request ( 
-			cert_request_seq,
-			cert_type_seq,
-			users_id,
-			request_reason
-		) values ( cert_request_seq.nextval, #{dto.cert_type_seq}, #{loginId}, #{dto.request_reason})
+		<selectKey keyProperty="dto.cert_request_seq"
+			       resultType="long"
+			       order="BEFORE">
+			select cert_request_seq.nextval from dual
+		</selectKey>	
+			insert into cert_issue_request ( 
+				cert_request_seq,
+				cert_type_seq,
+				users_id,
+				request_reason
+			) values ( #{dto.cert_request_seq}, #{dto.cert_type_seq}, #{loginId}, #{dto.request_reason})
 	</insert>
 	
 	<select id="countActiveCertRequest" resultType="int">
@@ -154,5 +159,9 @@
 	        and print_available_at <![CDATA[ <= ]]> sysdate
   			and print_expires_at >= sysdate
 	      for update
+	</select>
+	
+	<select id="getReqUserId" resultType="string">
+		select users_id from cert_issue_request where cert_request_seq = #{cert_request_seq}
 	</select>
 </mapper>

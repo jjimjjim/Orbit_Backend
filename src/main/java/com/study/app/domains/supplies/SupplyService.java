@@ -1,5 +1,7 @@
 package com.study.app.domains.supplies;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -7,10 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.study.app.domains.notifications.NotificationsDTO;
+import com.study.app.domains.notifications.NotificationsService;
+
 @Service
 public class SupplyService {
 	@Autowired
 	private SupplyDAO supplyDAO;
+	@Autowired
+	private NotificationsService notiServ;
 	
 	/*admin supply*/
 	public List<SupplyDTO> getSupplyList(){
@@ -58,7 +65,11 @@ public class SupplyService {
 	@Transactional
 	public void approveRequest(SupplyRequestDTO srDto) {
 		
-		supplyDAO.updateRequestStatus(srDto);  // 신청 상태 변경	
+		supplyDAO.updateRequestStatus(srDto);  // 신청 상태 변경
+		
+		// 비품 신청 승인/반려 알림 보낼 id 찾는 로직
+		String reqUserId = supplyDAO.getReqUserId(srDto.getReq_seq());
+		
 		 // 신청 비품 수 만큼 비품 현재 재고 차감
 		if ("APPROVED".equals(srDto.getStatus())) {
 			//req에 없는 dept 정보 조회
@@ -73,7 +84,23 @@ public class SupplyService {
 	            	new SupplyRentalDTO(item.getSupply_seq(), srDto.getUsers_id(), deptSeq, item.getEa(), srDto.getReq_date())
 	            );
 	        }
-		} 
+	     // 비품 신청 승인 INSERT / 알림 발송 로직
+	        notiServ.sendToUser(
+	        		reqUserId,
+	        		srDto.getReq_seq(),
+	        		"SUPPLY_APPROVED", 
+					"비품 신청이 승인되었습니다", 
+					"SUPPLY_REQUEST");
+	        
+	    // 비품 신청 반려 INSERT / 알림 발송 로직
+		}else if("REJECTED".equals(srDto.getStatus())) {
+			notiServ.sendToUser(
+					reqUserId,
+	        		srDto.getReq_seq(),
+	        		"SUPPLY_REJECTED", 
+					"비품 신청이 반려되었습니다", 
+					"SUPPLY_REQUEST");
+		}
 	}	
 	
 	@Transactional
@@ -84,12 +111,21 @@ public class SupplyService {
 	
 	/*supply request*/
 	@Transactional
-	public void supplyRequest(SupplyRequestDTO dto) {
+	public void supplyRequest(SupplyRequestDTO dto, String loginId) {
 		supplyDAO.supplyRequest(dto);  // req_seq가 dto에 세팅됨
 	    for (SupplyRequestItemsDTO item : dto.getItems()) {
 	        item.setReq_seq(dto.getReq_seq());
 	        supplyDAO.supplyRequestItems(item);
 	    }
+	    
+	    // 비품 신청 INSERT / 알림 발송 로직
+		notiServ.sendToAuthGroup(
+				"ROLE_GA_ADMIN", 
+				loginId,
+				dto.getReq_seq(), 
+				"SUPPLY", 
+				"비품 신청이 도착했습니다", 
+				"SUPPLY");
 	}
 	
 	/*mypage myRequestList*/

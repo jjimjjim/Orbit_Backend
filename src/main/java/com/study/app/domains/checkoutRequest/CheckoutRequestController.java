@@ -23,7 +23,7 @@ public class CheckoutRequestController {
 	    Map<String, Object> result = new HashMap<>(); 
 	    try {
 	    	dto.setUsers_id(loginId);
-	    	checkoutServ.insertCheckoutReq(dto);	        
+	    	checkoutServ.insertCheckoutReq(dto, loginId);	        
 	        
 	        result.put("success", true);
 	        result.put("message", "퇴근 정정 신청이 완료되었습니다.");

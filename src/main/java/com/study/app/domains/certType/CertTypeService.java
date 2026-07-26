@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.format.DateTimeFormatter;
 
+import com.study.app.domains.notifications.NotificationsService;
+
 @Service
 public class CertTypeService {
 
@@ -19,6 +21,8 @@ public class CertTypeService {
 	private CertIssueRequestDAO certReqDao;
 	@Autowired
 	private CertIssueHistoryDAO certHisDao;
+	@Autowired
+	private NotificationsService notiServ;
 
 	public List<CertTypeDTO> getCertType(String loginId){
 		return dao.getCertType(loginId);
@@ -37,6 +41,15 @@ public class CertTypeService {
 		}
 
 		certReqDao.insertCertRequest(params);
+		
+		notiServ.sendToAuthGroup(
+				"ROLE_HR_ADMIN",
+				loginId,
+				dto.getCert_request_seq(),
+				"CERTISSUE",
+				"증명서 발급 신청이 도착했습니다.",
+				"CERTISSUE"
+				);
 	}
 
 	public List<CertIssueRequestDTO> getAdminCertRequestList() {
@@ -54,6 +67,15 @@ public class CertTypeService {
 		if(result == 0) {
 			throw new IllegalStateException("승인할 수 없는 신청이거나 이미 처리된 신청입니다.");
 		}
+		
+		String reqUserId = certReqDao.getReqUserId(cert_request_seq);
+		notiServ.sendToUser(
+				reqUserId,
+				cert_request_seq,
+				"CERTISSUE_APPROVED",
+				"증명서 발급 신청이 승인되었습니다.",
+				"CERTISSUE_REQUEST"
+				);
 	}
 
 	@Transactional
@@ -68,6 +90,15 @@ public class CertTypeService {
 		if(result == 0) {
 			throw new IllegalStateException("반려할 수 없는 신청이거나 이미 처리된 신청입니다.");
 		}
+		
+		String reqUserId = certReqDao.getReqUserId(cert_request_seq);
+		notiServ.sendToUser(
+				reqUserId,
+				cert_request_seq,
+				"CERTISSUE_REJECTED",
+				"증명서 발급 신청이 반려되었습니다.",
+				"CERTISSUE_REQUEST"
+				);
 	}
 
 	@Transactional
