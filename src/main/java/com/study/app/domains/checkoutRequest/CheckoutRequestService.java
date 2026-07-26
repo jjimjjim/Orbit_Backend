@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.study.app.domains.attendance.AttendanceService;
+import com.study.app.domains.notifications.NotificationsService;
 
 @Service
 public class CheckoutRequestService {
@@ -17,6 +18,8 @@ public class CheckoutRequestService {
 	private CheckoutRequestDAO dao;
 	@Autowired
 	private AttendanceService attServ;
+	@Autowired
+	private NotificationsService notiServ;
 	
 	public Map<String, Object> getAllCheckoutRQ(Long cPage, String status) {
 		int recordCountPerPage = 10;
@@ -56,7 +59,15 @@ public class CheckoutRequestService {
 		dao.rejectCheckout(checkout_seq, loginId);
 	}
 	
-	public void insertCheckoutReq(CheckoutRequestDTO dto) {
+	public void insertCheckoutReq(CheckoutRequestDTO dto, String loginId) {
 	    dao.insertCheckoutReq(dto);
+	    
+	    notiServ.sendToAuthGroup(
+	    		"ROLE_HR_ADMIN", 
+	    		loginId,
+	    		dto.getCheckout_seq(),
+	    		"CHECKOUT", 
+	    		"근무시간 정정 신청이 도착했습니다.", 
+	    		"CHECKOUT");
 	}
 }

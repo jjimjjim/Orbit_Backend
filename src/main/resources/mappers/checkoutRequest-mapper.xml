@@ -58,11 +58,17 @@
 	</update>
 	
 	<insert id="insertCheckoutReq">
+		<selectKey keyProperty="checkout_seq"
+			       resultType="long"
+			       order="BEFORE">
+        select checkout_seq.nextval from dual
+    	</selectKey>
+		
 	    INSERT INTO CHECKOUT_REQUEST (
 	        CHECKOUT_SEQ, ATTENDANCE_SEQ, USERS_ID, CHECKOUT_DATE,
 	        REQ_CHECK_OUT, REASON, STATUS
 	    ) VALUES (
-	        CHECKOUT_SEQ.NEXTVAL,
+	        #{checkout_seq},
 	        #{attendance_seq},
 	        #{users_id},
 	        <choose>
