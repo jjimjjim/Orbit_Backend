@@ -16,6 +16,7 @@ import com.study.app.commons.Sha256Util;
 import com.study.app.commons.SsnValidator;
 import com.study.app.domains.annualLeave.AnnualLeaveDAO;
 import com.study.app.domains.file.FileService;
+import com.study.app.domains.notifications.NotificationsService;
 import com.study.app.domains.users.UsersDAO;
 import com.study.app.domains.users.UsersDTO;
 
@@ -32,6 +33,8 @@ public class SignupService {
 	private FileService fileServ;
 	@Autowired
     private Aes256Util aes256Util;
+	@Autowired
+	private NotificationsService notiServ;
 	
 	public boolean isExistId(String id) {
 		return dao.isExistId(id) > 0;
@@ -84,6 +87,14 @@ public class SignupService {
             
 		}
 		dao.signupRequest(dto);
+		
+		notiServ.sendToAuthGroup(
+				"ROLE_HR_ADMIN", 
+				null, 
+				dto.getSignup_seq(), 
+				"SIGNUP", 
+				"회원가입 승인 요청이 도착했습니다.", 
+				"SIGNUP");
 	}
 	
 	public Map<String, Object> getAllRequest(Long cPage, String status, String searchTerm) {

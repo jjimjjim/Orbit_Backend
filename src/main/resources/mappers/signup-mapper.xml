@@ -15,8 +15,13 @@
 	</select>
 
 	<insert id="signupRequest">
+		<selectKey keyProperty="signup_seq"
+			       resultType="long"
+			       order="BEFORE">
+        	select signup_seq.nextval from dual
+        </selectKey>
 		insert into signup values(
-		signup_seq.nextval, #{id}, #{pw}, #{name}, #{phone}, #{email},
+		#{signup_seq}, #{id}, #{pw}, #{name}, #{phone}, #{email},
 		#{oriname}, #{ssn_hash}, #{ssn_enc}, #{ssn_masked}, #{zonecode},
 		#{address1}, #{address2}, 'PENDING', sysdate, #{sysname}
 		)
