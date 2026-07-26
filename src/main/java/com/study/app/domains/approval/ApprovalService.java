@@ -1015,6 +1015,10 @@ public class ApprovalService {
 			} else if ("SPECIFIC_DEPT".equals(line.getApprover_scope())) {
 				searchParams.put("target_dept_seq", line.getTarget_dept_seq());
 				approver = usersDao.findApproverBySpecificDept(searchParams);
+				
+			} else if ("SPECIFIC_USER".equals(line.getApprover_scope())) {
+				searchParams.put("target_users_id", line.getTarget_users_id());
+				approver = usersDao.findApproverByTargetId(searchParams);
 			}
 			
 			if (approver != null) {
