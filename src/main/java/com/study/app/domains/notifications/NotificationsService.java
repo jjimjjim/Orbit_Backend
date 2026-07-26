@@ -1,12 +1,13 @@
 package com.study.app.domains.notifications;
 
-import java.util.HashMap;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.study.app.domains.approval.ApprovalDAO;
 import com.study.app.domains.projects.KanbanTaskDAO;
@@ -26,6 +27,42 @@ public class NotificationsService {
 	@Autowired
 	private ApprovalDAO appDao;
 
+	@Transactional
+	public void sendToAuthGroup(String auth_group, Long ref_seq, 
+			String noti_type, String content, String ref_type) {
+		
+		List<String> authAdminIds = notiDao.findAuthAdminIds(auth_group);
+		
+		for(String authAdminId : authAdminIds) {
+			NotificationsDTO noti = new NotificationsDTO();
+			
+			noti.setRef_seq(ref_seq);
+			noti.setUsers_id(authAdminId);
+			noti.setNoti_type(noti_type);
+			noti.setContent(content);
+			noti.setRef_type(ref_type);
+			noti.setRead_yn("N");
+			noti.setCreated_at(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+			insertNoti(noti);
+		}
+	}
+	
+	@Transactional
+	public void sendToUser(String users_id, Long ref_seq, 
+			String noti_type, String content, String ref_type) {
+		
+		NotificationsDTO noti = new NotificationsDTO();
+		
+		noti.setRef_seq(ref_seq);
+		noti.setUsers_id(users_id);
+		noti.setNoti_type(noti_type);
+		noti.setContent(content);
+		noti.setRef_type(ref_type);
+		noti.setRead_yn("N");
+		noti.setCreated_at(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+		insertNoti(noti);
+	}
+	
 	public void insertNoti(NotificationsDTO dto) {
 		notiDao.insertNoti(dto);
 		stomp.convertAndSend("/sub/notification/" + dto.getUsers_id(), dto);

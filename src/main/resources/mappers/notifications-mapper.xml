@@ -2,6 +2,22 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Notifications">
 
+	<select id="findAuthAdminIds"
+			parameterType="string"
+			resultType="string">
+		select distinct users_id
+		from (
+			select ur.users_id from users_role ur
+				where ur.auth_group in (#{auth_group}, 'ROLE_SUPER_ADMIN')
+			
+			union
+			
+			select u.id as users_id from users u
+				inner join departments d on u.dept_seq = d.dept_seq
+				where d.auth_group in (#{auth_group}, 'ROLE_SUPER_ADMIN')
+		)
+	</select>
+	
 	<insert id="insertNoti">
 		<selectKey keyProperty="noti_seq" resultType="Long" order="BEFORE">
 			select noti_seq.nextval from dual

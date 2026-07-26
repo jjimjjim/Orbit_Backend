@@ -328,4 +328,8 @@
 	    WHERE REQ_SEQ = #{req_seq}
 	    AND STATUS IN ('PENDING', 'REJECTED')
 	</delete>
+	
+	<select id="getReqUserId" resultType="string">
+		select users_id from supply_request where req_seq = #{req_seq}
+	</select>
 </mapper>

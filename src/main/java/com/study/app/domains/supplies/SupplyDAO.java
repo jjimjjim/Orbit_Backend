@@ -120,4 +120,9 @@ public class SupplyDAO {
 	public int deleteMySupplyRequest(Long req_seq) {
 	    return mybatis.delete("Supply.deleteMySupplyRequest", req_seq);
 	}
+	
+	// 비품 신청 승인/반려 알림 보낼 id 찾는 로직
+	public String getReqUserId(Long req_seq) {
+		return mybatis.selectOne("Supply.getReqUserId", req_seq);
+	}
 }

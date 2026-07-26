@@ -15,6 +15,10 @@ public class NotificationsDAO {
 	@Autowired
 	private SqlSessionTemplate batis;
 	
+	public List<String> findAuthAdminIds(String auth_group) {
+		return batis.selectList("Notifications.findAuthAdminIds", auth_group);
+	}
+	
 	public void insertNoti(NotificationsDTO dto) {
 		batis.insert("Notifications.insertNoti", dto);
 	}
