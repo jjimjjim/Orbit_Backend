@@ -161,4 +161,8 @@ public class UsersDAO {
 	public int insertSignupByAdmin(UsersDTO dto) {
 		return batis.insert("Users.insertSignupByAdmin", dto);
 	}
+	
+	public String getSsnMasked(String id) {
+		return batis.selectOne("Users.getSsnMasked", id);
+	}
 }

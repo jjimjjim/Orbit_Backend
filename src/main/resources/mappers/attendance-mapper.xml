@@ -39,21 +39,34 @@
     ORDER BY WORK_DATE
 </select>
 <select id="getCntMonth" resultType="com.study.app.domains.attendance.AttendanceDTO">
-	SELECT 
-	  COUNT(*) AS work_days,
-	  ROUND(SUM(TOTAL_WORK_MIN) / 60, 1) AS total_hours,
-	  SUM(CASE WHEN TO_CHAR(CHECK_IN, 'HH24:MI') > '09:00' THEN 1 ELSE 0 END) AS late_cnt,
-		(SELECT NVL(SUM(v.DAYS), 0) FROM VACATION v
-		    JOIN DRAFT_DOCUMENTS dd ON v.DOC_SEQ = dd.DOC_SEQ
-		    WHERE dd.USERS_ID = #{loginId}
-		    AND dd.STATUS = 'APPROVED'
-		    AND NVL(v.CANCEL_YN, 'N') = 'N'
-		    AND TO_CHAR(v.START_DATE, 'YYYY-MM') = TO_CHAR(SYSDATE, 'YYYY-MM')
-		) AS vac_cnt
-	FROM ATTENDANCE
-	WHERE USERS_ID = #{loginId}
-	AND TO_CHAR(WORK_DATE, 'YYYY-MM') = TO_CHAR(SYSDATE, 'YYYY-MM')
-	GROUP BY USERS_ID
+	select
+		a.work_days,
+		a.total_hours,
+		a.late_cnt,
+			(
+			select nvl(sum(v.days), 0)
+			from vacation v
+				join draft_documents dd on v.doc_seq = dd.doc_seq
+			where dd.users_id = #{loginId}
+					and dd.status = 'APPROVED'
+					and nvl(v.cancel_yn, 'N') = 'N'
+					and v.start_date >= trunc(sysdate, 'MM')
+					and v.start_date <![CDATA[ < ]]> add_months(trunc(sysdate, 'MM'), 1)
+					) as vac_cnt
+				from (
+				select
+				count(work_date) as work_days,
+					nvl(round(sum(total_work_min) / 60, 1), 0) as total_hours,
+					nvl(
+						sum(
+							case
+					when to_char(check_in, 'HH24:MI') > '09:00' 
+					then 1 else 0 end ), 0 ) as late_cnt
+			from attendance
+			where users_id = #{loginId}
+			and work_date >= trunc(sysdate, 'MM')
+			and work_date <![CDATA[ < ]]> add_months(trunc(sysdate, 'MM'), 1)
+			) a
 </select>
 <select id="getCntWeek" resultType="com.study.app.domains.attendance.AttendanceDTO">
 	<![CDATA[
