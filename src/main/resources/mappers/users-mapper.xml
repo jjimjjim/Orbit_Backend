@@ -245,7 +245,8 @@
 	    SELECT COUNT(*) FROM (
 	        SELECT EMAIL FROM USERS WHERE ID != #{id}
 	        UNION
-	        SELECT EMAIL FROM SIGNUP WHERE STATUS IN ('PENDING', 'APPROVED')
+	        SELECT EMAIL FROM SIGNUP WHERE STATUS IN ('PENDING', 'APPROVED') 
+	        	AND ID != #{id}
 	    ) WHERE EMAIL = #{email}
 	</select>
 	
