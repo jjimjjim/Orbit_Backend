@@ -28,16 +28,21 @@ public class NotificationsService {
 	private ApprovalDAO appDao;
 
 	@Transactional
-	public void sendToAuthGroup(String auth_group, Long ref_seq, 
+	public void sendToAuthGroup(String auth_group, String loginId, Long ref_seq,
 			String noti_type, String content, String ref_type) {
 		
 		List<String> authAdminIds = notiDao.findAuthAdminIds(auth_group);
 		
 		for(String authAdminId : authAdminIds) {
+			
+			if(authAdminId.equals(loginId)) {
+				continue;
+			}
+			
 			NotificationsDTO noti = new NotificationsDTO();
 			
-			noti.setRef_seq(ref_seq);
 			noti.setUsers_id(authAdminId);
+			noti.setRef_seq(ref_seq);
 			noti.setNoti_type(noti_type);
 			noti.setContent(content);
 			noti.setRef_type(ref_type);

@@ -89,7 +89,7 @@ public class SupplyService {
 	        		reqUserId,
 	        		srDto.getReq_seq(),
 	        		"SUPPLY_APPROVED", 
-					"비품 신청 요청이 승인되었습니다", 
+					"비품 신청이 승인되었습니다", 
 					"SUPPLY_REQUEST");
 	        
 	    // 비품 신청 반려 INSERT / 알림 발송 로직
@@ -98,7 +98,7 @@ public class SupplyService {
 					reqUserId,
 	        		srDto.getReq_seq(),
 	        		"SUPPLY_REJECTED", 
-					"비품 신청 요청이 반려되었습니다", 
+					"비품 신청이 반려되었습니다", 
 					"SUPPLY_REQUEST");
 		}
 	}	
@@ -111,7 +111,7 @@ public class SupplyService {
 	
 	/*supply request*/
 	@Transactional
-	public void supplyRequest(SupplyRequestDTO dto) {
+	public void supplyRequest(SupplyRequestDTO dto, String loginId) {
 		supplyDAO.supplyRequest(dto);  // req_seq가 dto에 세팅됨
 	    for (SupplyRequestItemsDTO item : dto.getItems()) {
 	        item.setReq_seq(dto.getReq_seq());
@@ -121,9 +121,10 @@ public class SupplyService {
 	    // 비품 신청 INSERT / 알림 발송 로직
 		notiServ.sendToAuthGroup(
 				"ROLE_GA_ADMIN", 
+				loginId,
 				dto.getReq_seq(), 
 				"SUPPLY", 
-				"비품 신청 요청이 도착했습니다", 
+				"비품 신청이 도착했습니다", 
 				"SUPPLY");
 	}
 	

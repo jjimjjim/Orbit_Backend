@@ -29,7 +29,7 @@ public class SupplyController {
 	@PostMapping("/request")
 	public ResponseEntity<Void> supplyRequest(@RequestAttribute String loginId, @RequestBody SupplyRequestDTO dto){
 		dto.setUsers_id(loginId);
-		supplyServ.supplyRequest(dto);
+		supplyServ.supplyRequest(dto, loginId);
 		return ResponseEntity.ok().build();
 	}
 }

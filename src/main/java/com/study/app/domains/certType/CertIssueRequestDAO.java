@@ -44,4 +44,8 @@ public class CertIssueRequestDAO {
 	public CertIssueRequestDTO getPrintableCertRequest(Map<String, Object> params) {
 		return batis.selectOne("CertIssueRequest.getPrintableCertRequest", params);
 	}
+	
+	public String getReqUserId(Long cert_request_seq) {
+		return batis.selectOne("CertIssueRequest.getReqUserId", cert_request_seq);
+	}
 }
