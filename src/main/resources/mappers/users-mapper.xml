@@ -352,4 +352,9 @@
 	        'APPROVED', sysdate, #{sysname}
 	    )
 	</insert>
+	
+	<select id="getSsnMasked" resultType="string">
+		select ssn_masked from users where id = #{id}
+	</select>
+	
 </mapper>
