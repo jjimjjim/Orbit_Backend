@@ -112,6 +112,8 @@ public class CertTypeService {
 		if(result == 0) {
 			throw new IllegalStateException("취소할 수 없는 신청이거나 이미 처리된 신청입니다.");
 		}
+		
+		notiServ.deleteCertRequestNotiBySeq(cert_request_seq);
 	}
 
 	@Transactional

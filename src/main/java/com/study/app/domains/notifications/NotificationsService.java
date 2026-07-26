@@ -145,6 +145,24 @@ public class NotificationsService {
 	public void updateReadNoti(Long noti_seq) {
 		notiDao.updateReadNoti(noti_seq);
 	}
+	
+	public void deleteSupplyNotiBySeq(Long ref_seq) {
+		List<NotificationsDTO> deleteTarget = notiDao.findSupplyNotiBySeq(ref_seq);
+		notiDao.deleteSupplyNotiBySeq(ref_seq);
+		
+		for(NotificationsDTO dto : deleteTarget) {
+			sendDeleteEvent(dto);
+		}
+	}
+	
+	public void deleteCertRequestNotiBySeq(Long ref_seq) {
+		List<NotificationsDTO> deleteTarget = notiDao.findCertRequestNotiBySeq(ref_seq);
+		notiDao.deleteCertRequestNotiBySeq(ref_seq);
+		
+		for(NotificationsDTO dto : deleteTarget) {
+			sendDeleteEvent(dto);
+		}
+	}
 
 	private void sendDeleteEvent(NotificationsDTO dto) {
 		NotificationsDeleteEventDTO deleteDto = new NotificationsDeleteEventDTO (
