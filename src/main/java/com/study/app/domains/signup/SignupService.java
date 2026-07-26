@@ -13,6 +13,7 @@ import com.study.app.commons.Aes256Util;
 import com.study.app.commons.EncryptionUtils;
 import com.study.app.commons.MaskingUtil;
 import com.study.app.commons.Sha256Util;
+import com.study.app.commons.SsnValidator;
 import com.study.app.domains.annualLeave.AnnualLeaveDAO;
 import com.study.app.domains.file.FileService;
 import com.study.app.domains.users.UsersDAO;
@@ -53,6 +54,11 @@ public class SignupService {
 		String ssn = dto.getSsn();
 	    
 	    if (ssn != null && !ssn.isEmpty()) {
+	    	
+	    	if (!SsnValidator.isValid(ssn)) {
+	            throw new IllegalArgumentException("올바른 주민등록번호가 아닙니다.");
+	        }
+	    	
 	        // AES256 암호화
 	        String ssn_enc = aes256Util.encrypt(ssn);
 	        dto.setSsn_enc(ssn_enc);

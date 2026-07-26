@@ -32,10 +32,14 @@ public class SignupController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Void> signupRequest(@RequestPart("input") SignupDTO dto,
+	public ResponseEntity<?> signupRequest(@RequestPart("input") SignupDTO dto,
 												@RequestPart("file") MultipartFile profile) {
 		
-		signupServ.signupRequest(dto, profile);
-		return ResponseEntity.ok().build();
+		try {
+			signupServ.signupRequest(dto, profile);
+			return ResponseEntity.ok().build();
+		} catch(IllegalArgumentException e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
 	}
 }
