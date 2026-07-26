@@ -86,5 +86,12 @@ public class NotificationsDAO {
 	    return batis.selectList("Notifications.findNotiBySeqAndId", params);
 	}
 	
+	public List<NotificationsDTO> findSupplyNotiBySeq(Long ref_seq) {
+		return batis.selectList("Notifications.findSupplyNotiBySeq", ref_seq);
+	}
+	
+	public void deleteSupplyNotiBySeq(Long ref_seq) {
+		batis.delete("Notifications.deleteSupplyNotiBySeq", ref_seq);
+	}
 	
 }

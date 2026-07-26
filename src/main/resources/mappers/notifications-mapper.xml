@@ -89,4 +89,12 @@
 	<update id="updateReadNoti">
 		update notifications set read_yn = 'Y' where noti_seq = #{noti_seq}
 	</update>
+	
+	<select id="findSupplyNotiBySeq" resultType="com.study.app.domains.notifications.NotificationsDTO">
+		select * from notifications where ref_type = 'SUPPLY' and ref_seq = #{ref_seq}
+	</select>
+	
+	<delete id="deleteSupplyNotiBySeq">
+		delete from notifications where ref_type = 'SUPPLY' and ref_seq = #{ref_seq} 
+	</delete>
 </mapper>
